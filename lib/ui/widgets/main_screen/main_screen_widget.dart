@@ -1,10 +1,11 @@
+import 'package:moviedb_app_llf/domain/data_providers/session_data_provider.dart';
 import 'package:moviedb_app_llf/ui/widgets/movie_list/movie_list_widget.dart';
 import 'package:moviedb_app_llf/ui/widgets/news/news_widget.dart';
 import 'package:moviedb_app_llf/ui/widgets/tv_show_list/tv_show_list_widget.dart';
 import 'package:flutter/material.dart';
 
 class MainScreenWidget extends StatefulWidget {
-  const MainScreenWidget({Key? key}) : super(key: key);
+  const MainScreenWidget({super.key});
 
   @override
   _MainScreenWidgetState createState() => _MainScreenWidgetState();
@@ -24,8 +25,14 @@ class _MainScreenWidgetState extends State<MainScreenWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('TMDB'),
-        actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.search))],
+        centerTitle: true,
+        title: const Text('TMDB', style: TextStyle(color: Colors.white)),
+        actions: [
+          IconButton(
+            onPressed: () => SessionDataProvider().setSessionId(null),
+            icon: const Icon(Icons.search, color: Colors.white),
+          ),
+        ],
       ),
       body: IndexedStack(
         index: _selectedTab,
