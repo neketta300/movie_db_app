@@ -3,7 +3,7 @@ import 'package:moviedb_app_llf/ui/widgets/auth/auth_model.dart';
 import 'package:flutter/material.dart';
 
 class AuthWidget extends StatefulWidget {
-  const AuthWidget({Key? key}) : super(key: key);
+  const AuthWidget({super.key});
 
   @override
   _AuthWidgetState createState() => _AuthWidgetState();
@@ -20,7 +20,7 @@ class _AuthWidgetState extends State<AuthWidget> {
 }
 
 class _HeaderWidget extends StatelessWidget {
-  const _HeaderWidget({Key? key}) : super(key: key);
+  const _HeaderWidget();
 
   @override
   Widget build(BuildContext context) {
@@ -111,7 +111,7 @@ class _FormWidget extends StatelessWidget {
 }
 
 class _AuthButtonWidget extends StatelessWidget {
-  const _AuthButtonWidget({Key? key}) : super(key: key);
+  const _AuthButtonWidget();
 
   @override
   Widget build(BuildContext context) {
@@ -145,7 +145,7 @@ class _AuthButtonWidget extends StatelessWidget {
 }
 
 class _ErrorMessageWidget extends StatelessWidget {
-  const _ErrorMessageWidget({Key? key}) : super(key: key);
+  const _ErrorMessageWidget();
 
   @override
   Widget build(BuildContext context) {
