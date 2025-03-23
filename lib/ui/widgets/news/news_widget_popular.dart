@@ -3,7 +3,7 @@ import 'package:moviedb_app_llf/ui/widgets/elements/radial_percent_widget.dart';
 import 'package:flutter/material.dart';
 
 class NewsWidgetPopular extends StatefulWidget {
-  const NewsWidgetPopular({Key? key}) : super(key: key);
+  const NewsWidgetPopular({super.key});
 
   @override
   _NewsWidgetPopularState createState() => _NewsWidgetPopularState();
@@ -45,7 +45,7 @@ class _NewsWidgetPopularState extends State<NewsWidgetPopular> {
         ),
         const SizedBox(height: 20),
         SizedBox(
-          height: 306,
+          height: 320,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             itemCount: 10,
@@ -72,7 +72,7 @@ class _NewsWidgetPopularState extends State<NewsWidgetPopular> {
                           right: 15,
                           child: Container(
                             decoration: BoxDecoration(
-                              color: Colors.grey.withOpacity(0.7),
+                              color: Colors.grey.withValues(alpha: 0.7),
                               borderRadius: BorderRadius.circular(20),
                             ),
                             child: const Icon(Icons.more_horiz),

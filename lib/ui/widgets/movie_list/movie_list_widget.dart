@@ -1,5 +1,6 @@
 import 'package:moviedb_app_llf/resources/resources.dart';
 import 'package:flutter/material.dart';
+import 'package:moviedb_app_llf/ui/navigation/main_navigation.dart';
 
 class Movie {
   final int id;
@@ -18,7 +19,7 @@ class Movie {
 }
 
 class MovieListWidget extends StatefulWidget {
-  MovieListWidget({Key? key}) : super(key: key);
+  const MovieListWidget({super.key});
 
   @override
   _MovieListWidgetState createState() => _MovieListWidgetState();
@@ -169,7 +170,7 @@ class _MovieListWidgetState extends State<MovieListWidget> {
     final id = _movies[index].id;
     Navigator.of(
       context,
-    ).pushNamed('/main_screen/movie_details', arguments: id);
+    ).pushNamed(MainNavigationRoutesName.movieDetails, arguments: id);
   }
 
   @override
@@ -190,11 +191,13 @@ class _MovieListWidgetState extends State<MovieListWidget> {
                   Container(
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      border: Border.all(color: Colors.black.withOpacity(0.2)),
+                      border: Border.all(
+                        color: Colors.black.withValues(alpha: 0.2),
+                      ),
                       borderRadius: const BorderRadius.all(Radius.circular(10)),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
+                          color: Colors.black.withValues(alpha: 0.1),
                           blurRadius: 8,
                           offset: const Offset(0, 2),
                         ),

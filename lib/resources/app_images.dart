@@ -4,7 +4,7 @@ class AppImages {
   AppImages._();
 
   static const String actor = 'images/actor.jpeg';
-  static const String tvshowPlaceholder = 'images/tvshow_placeholder.jpg';
+  static const String tvshowPlaceholder = 'images/tvshow_placeholder.jpeg';
   static const String trailerPreview = 'images/trailer_preview.jpeg';
   static const String contrebuter = 'images/contrebuter.jpeg';
   static const String moviePlacholder = 'images/movie_placholder.jpeg';
