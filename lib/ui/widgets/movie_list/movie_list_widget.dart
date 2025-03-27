@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:moviedb_app_llf/domain/api_client/api_client.dart';
 import 'package:moviedb_app_llf/library/widgets/inherited/provider.dart';
 import 'package:flutter/material.dart';
@@ -64,7 +65,7 @@ class MovieListWidget extends StatelessWidget {
                               ),
                               const SizedBox(height: 5),
                               Text(
-                                movie.releaseDate?.toString() ?? 'Coming soon',
+                                model.stringFromDate(movie.releaseDate),
                                 style: const TextStyle(color: Colors.grey),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
