@@ -3,7 +3,7 @@ import 'package:moviedb_app_llf/ui/widgets/elements/radial_percent_widget.dart';
 import 'package:flutter/material.dart';
 
 class MovieDetailsMainInfoWidget extends StatelessWidget {
-  const MovieDetailsMainInfoWidget({Key? key}) : super(key: key);
+  const MovieDetailsMainInfoWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +38,7 @@ class MovieDetailsMainInfoWidget extends StatelessWidget {
 }
 
 class _DescriptionWidget extends StatelessWidget {
-  const _DescriptionWidget({Key? key}) : super(key: key);
+  const _DescriptionWidget();
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +54,7 @@ class _DescriptionWidget extends StatelessWidget {
 }
 
 class _TopPosterWidget extends StatelessWidget {
-  const _TopPosterWidget({Key? key}) : super(key: key);
+  const _TopPosterWidget();
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +73,7 @@ class _TopPosterWidget extends StatelessWidget {
 }
 
 class _MovieNameWidget extends StatelessWidget {
-  const _MovieNameWidget({Key? key}) : super(key: key);
+  const _MovieNameWidget();
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +97,7 @@ class _MovieNameWidget extends StatelessWidget {
 }
 
 class _ScoreWidget extends StatelessWidget {
-  const _ScoreWidget({Key? key}) : super(key: key);
+  const _ScoreWidget();
 
   @override
   Widget build(BuildContext context) {
@@ -141,7 +141,7 @@ class _ScoreWidget extends StatelessWidget {
 }
 
 class _SummeryWidget extends StatelessWidget {
-  const _SummeryWidget({Key? key}) : super(key: key);
+  const _SummeryWidget();
 
   @override
   Widget build(BuildContext context) {
@@ -165,7 +165,7 @@ class _SummeryWidget extends StatelessWidget {
 }
 
 class _PeopleWidgets extends StatelessWidget {
-  const _PeopleWidgets({Key? key}) : super(key: key);
+  const _PeopleWidgets();
 
   @override
   Widget build(BuildContext context) {

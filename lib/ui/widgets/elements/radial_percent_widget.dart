@@ -10,15 +10,15 @@ class RadialPercentWidget extends StatelessWidget {
   final Color freeColor;
   final double lineWidth;
 
-  RadialPercentWidget({
-    Key? key,
+  const RadialPercentWidget({
+    super.key,
     required this.child,
     required this.percent,
     required this.fillColor,
     required this.lineColor,
     required this.freeColor,
     required this.lineWidth,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -69,33 +69,30 @@ class _RadialPercentPainter extends CustomPainter {
   }
 
   void _darwBackground(Canvas canvas, Rect rect) {
-    final paint = Paint()
-      ..color = fillColor
-      ..style = PaintingStyle.fill;
+    final paint =
+        Paint()
+          ..color = fillColor
+          ..style = PaintingStyle.fill;
     canvas.drawOval(rect, paint);
   }
 
   void _darwFiledSpace(Canvas canvas, Rect rect) {
-    final paint = Paint()
-      ..color = lineColor
-      ..style = PaintingStyle.stroke
-      ..strokeCap = StrokeCap.round;
+    final paint =
+        Paint()
+          ..color = lineColor
+          ..style = PaintingStyle.stroke
+          ..strokeCap = StrokeCap.round;
     paint.strokeWidth = lineWidth;
 
-    canvas.drawArc(
-      rect,
-      _radians(-90),
-      _radians(360 * percent),
-      false,
-      paint,
-    );
+    canvas.drawArc(rect, _radians(-90), _radians(360 * percent), false, paint);
   }
 
   void _darwFreeSpace(Canvas canvas, Rect rect) {
-    final paint = Paint()
-      ..color = freeColor
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = lineWidth;
+    final paint =
+        Paint()
+          ..color = freeColor
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = lineWidth;
 
     canvas.drawArc(
       rect,
@@ -112,7 +109,8 @@ class _RadialPercentPainter extends CustomPainter {
 
   Rect _calculateCirclesRect(Size size) {
     final offset = lineWidth / 2;
-    final rect = Offset(offset, offset) &
+    final rect =
+        Offset(offset, offset) &
         Size(size.width - lineWidth, size.height - lineWidth);
     return rect;
   }

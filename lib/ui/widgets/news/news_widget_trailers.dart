@@ -2,7 +2,7 @@ import 'package:moviedb_app_llf/resources/resources.dart';
 import 'package:flutter/material.dart';
 
 class NewsWidgetTrailers extends StatefulWidget {
-  const NewsWidgetTrailers({Key? key}) : super(key: key);
+  const NewsWidgetTrailers({super.key});
 
   @override
   _NewsWidgetTrailersState createState() => _NewsWidgetTrailersState();
@@ -109,7 +109,7 @@ class _NewsWidgetTrailersState extends State<NewsWidgetTrailers> {
                                 right: 15,
                                 child: Container(
                                   decoration: BoxDecoration(
-                                    color: Colors.grey.withOpacity(0.7),
+                                    color: Colors.grey.withValues(alpha: 0.7),
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                   child: const Icon(Icons.more_horiz),

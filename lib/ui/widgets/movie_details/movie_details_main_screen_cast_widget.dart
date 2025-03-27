@@ -2,7 +2,7 @@ import 'package:moviedb_app_llf/resources/resources.dart';
 import 'package:flutter/material.dart';
 
 class MovieDetailsMainScreenCastWidget extends StatelessWidget {
-  const MovieDetailsMainScreenCastWidget({Key? key}) : super(key: key);
+  const MovieDetailsMainScreenCastWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -32,14 +32,14 @@ class MovieDetailsMainScreenCastWidget extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: Colors.white,
                         border: Border.all(
-                          color: Colors.black.withOpacity(0.2),
+                          color: Colors.black.withValues(alpha: 0.2),
                         ),
                         borderRadius: const BorderRadius.all(
                           Radius.circular(10),
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
+                            color: Colors.black.withValues(alpha: 0.1),
                             blurRadius: 8,
                             offset: const Offset(0, 2),
                           ),
