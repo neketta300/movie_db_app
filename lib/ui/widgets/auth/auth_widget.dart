@@ -13,7 +13,13 @@ class _AuthWidgetState extends State<AuthWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Login to your account')),
+      appBar: AppBar(
+        centerTitle: true,
+        title: const Text(
+          'Login to your account',
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
       body: ListView(children: [const _HeaderWidget()]),
     );
   }

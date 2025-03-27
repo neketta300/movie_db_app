@@ -32,8 +32,18 @@ class AuthModel extends ChangeNotifier {
     String? sessionId;
     try {
       sessionId = await _apiClient.auth(username: login, password: password);
-    } catch (e) {
-      _errorMessage = 'Неправильный логин пароль!';
+    } on ApiClientException catch (e) {
+      switch (e.type) {
+        case ApiCLientExceptionType.Network:
+          _errorMessage = 'Сервер недоступен, нет подключения к инету';
+          break;
+        case ApiCLientExceptionType.Auth:
+          _errorMessage = 'Неправильный логин или пароль';
+          break;
+        case ApiCLientExceptionType.Other:
+          _errorMessage = 'Произошла ошибка. Попробуйте еще раз';
+          break;
+      }
     }
     _isAuthProgress = false;
     if (_errorMessage != null) {
