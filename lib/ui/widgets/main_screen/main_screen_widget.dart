@@ -1,4 +1,6 @@
 import 'package:moviedb_app_llf/domain/data_providers/session_data_provider.dart';
+import 'package:moviedb_app_llf/library/widgets/inherited/provider.dart';
+import 'package:moviedb_app_llf/ui/widgets/movie_list/movie_list_model.dart';
 import 'package:moviedb_app_llf/ui/widgets/movie_list/movie_list_widget.dart';
 import 'package:moviedb_app_llf/ui/widgets/news/news_widget.dart';
 import 'package:moviedb_app_llf/ui/widgets/tv_show_list/tv_show_list_widget.dart';
@@ -13,12 +15,19 @@ class MainScreenWidget extends StatefulWidget {
 
 class _MainScreenWidgetState extends State<MainScreenWidget> {
   int _selectedTab = 0;
+  final movieListModel = MovieListModel();
 
   void onSelectTab(int index) {
     if (_selectedTab == index) return;
     setState(() {
       _selectedTab = index;
     });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    movieListModel.loadMovies();
   }
 
   @override
@@ -36,7 +45,11 @@ class _MainScreenWidgetState extends State<MainScreenWidget> {
       ),
       body: IndexedStack(
         index: _selectedTab,
-        children: [const NewsWidget(), MovieListWidget(), TWShowListWidget()],
+        children: [
+          const NewsWidget(),
+          NotifierProvider(model: movieListModel, child: MovieListWidget()),
+          TWShowListWidget(),
+        ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedTab,
