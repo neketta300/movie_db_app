@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:moviedb_app_llf/domain/entity/popular_movie_response.dart';
 
-enum ApiCLientExceptionType { Network, Auth, Other }
+enum ApiCLientExceptionType { network, auth, other }
 
 class ApiClientException implements Exception {
   final ApiCLientExceptionType type;
@@ -65,11 +65,11 @@ class ApiClient {
       final result = parser(json);
       return result;
     } on SocketException {
-      throw ApiClientException(ApiCLientExceptionType.Network);
+      throw ApiClientException(ApiCLientExceptionType.network);
     } on ApiClientException {
       rethrow;
     } catch (_) {
-      throw ApiCLientExceptionType.Other;
+      throw ApiCLientExceptionType.other;
     }
   }
 
@@ -98,11 +98,11 @@ class ApiClient {
       final result = parser(json);
       return result;
     } on SocketException {
-      throw ApiClientException(ApiCLientExceptionType.Network);
+      throw ApiClientException(ApiCLientExceptionType.network);
     } on ApiClientException {
       rethrow;
     } catch (_) {
-      throw ApiCLientExceptionType.Other;
+      throw ApiCLientExceptionType.other;
     }
   }
 
@@ -114,7 +114,7 @@ class ApiClient {
     };
 
     final result = _get('/authentication/token/new', parser, <String, dynamic>{
-      'Authorization': _apiKeyHeader,
+      'authorization': _apiKeyHeader,
     });
     return result;
   }
@@ -129,7 +129,7 @@ class ApiClient {
     final result = _get(
       '/movie/popular',
       parser,
-      <String, dynamic>{'Authorization': _apiKeyHeader},
+      <String, dynamic>{'authorization': _apiKeyHeader},
       <String, dynamic>{'language': locale.toString(), 'page': page.toString()},
     );
     return result;
@@ -149,7 +149,7 @@ class ApiClient {
     final result = _get(
       '/search/movie',
       parser,
-      <String, dynamic>{'Authorization': _apiKeyHeader},
+      <String, dynamic>{'authorization': _apiKeyHeader},
       <String, dynamic>{
         'query': query,
         'include_adult': true.toString(),
@@ -180,7 +180,7 @@ class ApiClient {
     final result = _post(
       '/authentication/token/validate_with_login',
       parser,
-      <String, dynamic>{'Authorization': _apiKeyHeader},
+      <String, dynamic>{'authorization': _apiKeyHeader},
       parameters,
     );
     return result;
@@ -198,7 +198,7 @@ class ApiClient {
     final result = _post(
       '/authentication/session/new',
       parser,
-      <String, dynamic>{'Authorization': _apiKeyHeader},
+      <String, dynamic>{'authorization': _apiKeyHeader},
       parameters,
     );
     return result;
@@ -209,9 +209,9 @@ class ApiClient {
       final dynamic status = json['status_code'];
       final code = status is int ? status : 0;
       if (code == 30) {
-        throw ApiClientException(ApiCLientExceptionType.Auth);
+        throw ApiClientException(ApiCLientExceptionType.auth);
       } else {
-        throw ApiClientException(ApiCLientExceptionType.Other);
+        throw ApiClientException(ApiCLientExceptionType.other);
       }
     }
   }

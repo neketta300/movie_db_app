@@ -1,4 +1,3 @@
-import 'package:intl/intl.dart';
 import 'package:moviedb_app_llf/domain/api_client/api_client.dart';
 import 'package:moviedb_app_llf/library/widgets/inherited/provider.dart';
 import 'package:flutter/material.dart';
