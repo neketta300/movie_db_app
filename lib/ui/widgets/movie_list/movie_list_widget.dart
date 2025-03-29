@@ -99,6 +99,7 @@ class MovieListWidget extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(10.0),
           child: TextField(
+            onChanged: model.searchMovie,
             //  controller: _searchController,
             decoration: InputDecoration(
               labelText: 'Поиск',
