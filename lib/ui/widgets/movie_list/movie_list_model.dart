@@ -7,6 +7,9 @@ import 'package:moviedb_app_llf/ui/navigation/main_navigation.dart';
 class MovieListModel extends ChangeNotifier {
   final _apiCLient = ApiClient();
   final _movies = <Movie>[];
+  late int _currentPage;
+  late int _totalPage;
+  var _isLoadingInProgres = false;
   List<Movie> get movies => List.unmodifiable(_movies);
   late DateFormat _dateFomat;
   String _locale = '';
@@ -20,15 +23,29 @@ class MovieListModel extends ChangeNotifier {
     if (_locale == locale) return;
     _locale = locale;
     _dateFomat = DateFormat.yMMMd(locale);
+    _currentPage = 0;
+    _totalPage = 1;
     _movies.clear();
-    loadMovies();
+    _loadMovies();
     print(_locale);
   }
 
-  Future<void> loadMovies() async {
-    final moviesResponse = await _apiCLient.popularMovies(2, _locale);
-    _movies.addAll(moviesResponse.movies);
-    notifyListeners();
+  Future<void> _loadMovies() async {
+    if (_isLoadingInProgres || _currentPage >= _totalPage) return;
+    _isLoadingInProgres = true;
+    final nextPage = _currentPage + 1;
+
+    try {
+      final moviesResponse = await _apiCLient.popularMovies(nextPage, _locale);
+      _currentPage = moviesResponse.page;
+      _totalPage = moviesResponse.totalPages;
+
+      _movies.addAll(moviesResponse.movies);
+      _isLoadingInProgres = false;
+      notifyListeners();
+    } catch (e) {
+      _isLoadingInProgres = false;
+    }
   }
 
   void onMovieTap(BuildContext context, int index) {
@@ -36,5 +53,11 @@ class MovieListModel extends ChangeNotifier {
     Navigator.of(
       context,
     ).pushNamed(MainNavigationRoutesName.movieDetails, arguments: id);
+  }
+
+  void showedMovieAtIndex(int index) {
+    print(index);
+    if (index < _movies.length - 1) return;
+    _loadMovies();
   }
 }
