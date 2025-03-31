@@ -47,7 +47,11 @@ class _MainScreenWidgetState extends State<MainScreenWidget> {
         index: _selectedTab,
         children: [
           const NewsWidget(),
-          NotifierProvider(model: movieListModel, child: MovieListWidget()),
+          NotifierProvider(
+            create: () => movieListModel,
+            isManagingModel: false,
+            child: MovieListWidget(),
+          ),
           TWShowListWidget(),
         ],
       ),

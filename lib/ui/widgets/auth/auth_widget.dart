@@ -1,3 +1,4 @@
+import 'package:moviedb_app_llf/library/widgets/inherited/provider.dart';
 import 'package:moviedb_app_llf/ui/theme/app_button_style.dart';
 import 'package:moviedb_app_llf/ui/widgets/auth/auth_model.dart';
 import 'package:flutter/material.dart';
