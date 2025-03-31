@@ -1,11 +1,12 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:moviedb_app_llf/domain/entity/movie_date_parser.dart';
 
 part 'movie_details.g.dart';
 
 @JsonSerializable(
   fieldRename: FieldRename.snake,
   explicitToJson: true,
-) // зм explicitToJson для вложенных классов
+) // explicitToJson для вложенных классов
 class MovieDetails {
   final bool adult;
   final String backdropPath;
@@ -22,7 +23,8 @@ class MovieDetails {
   final String posterPath;
   final List<ProductionCompanie> productionCompanies;
   final List<ProductionCountrie> productionCountries;
-  final String releaseDate;
+  @JsonKey(fromJson: parseDateFromString)
+  final DateTime? releaseDate;
   final int revenue;
   final int runtime;
   final List<SpokenLanguage> spokenLanguages;
@@ -66,7 +68,9 @@ class MovieDetails {
   Map<String, dynamic> toJson() => _$MovieDetailsToJson(this);
 }
 
-@JsonSerializable(fieldRename: FieldRename.snake) // зм
+@JsonSerializable(
+  fieldRename: FieldRename.snake,
+) // fieldRename: FieldRename.snake чтобы полученые поля в формате name_sndname были в nameScndname
 class Genre {
   final int id;
   final String name;
@@ -77,7 +81,9 @@ class Genre {
   Map<String, dynamic> toJson() => _$GenreToJson(this);
 }
 
-@JsonSerializable(fieldRename: FieldRename.snake) // зм
+@JsonSerializable(
+  fieldRename: FieldRename.snake,
+) // fieldRename: FieldRename.snake чтобы полученые поля в формате name_sndname были в nameScndname
 class ProductionCompanie {
   final int id;
   final String? logoPath;

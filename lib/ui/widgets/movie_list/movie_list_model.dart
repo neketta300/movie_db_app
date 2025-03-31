@@ -17,7 +17,7 @@ class MovieListModel extends ChangeNotifier {
   late DateFormat _dateFomat;
   String _locale = '';
   String? _seacrhQuery;
-  Timer? searchDeboubce;
+  Timer? searchDeboubce; // таймер для паузы между запросами при поиске фильмов
 
   String stringFromDate(DateTime? date) =>
       date != null ? _dateFomat.format(date) : '';
