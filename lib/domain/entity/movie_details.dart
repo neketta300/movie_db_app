@@ -9,27 +9,27 @@ part 'movie_details.g.dart';
 ) // explicitToJson для вложенных классов
 class MovieDetails {
   final bool adult;
-  final String backdropPath;
-  final String? belongsToCollection;
+  final String? backdropPath;
+  final Map<String, dynamic>? belongsToCollection;
   final int budget;
   final List<Genre> genres;
-  final String homepage;
+  final String? homepage;
   final int id;
-  final String imdbId;
+  final String? imdbId;
   final String originalLanguage;
   final String originalTitle;
-  final String overview;
+  final String? overview;
   final double popularity;
-  final String posterPath;
+  final String? posterPath;
   final List<ProductionCompanie> productionCompanies;
   final List<ProductionCountrie> productionCountries;
   @JsonKey(fromJson: parseDateFromString)
   final DateTime? releaseDate;
   final int revenue;
-  final int runtime;
+  final int? runtime;
   final List<SpokenLanguage> spokenLanguages;
   final String status;
-  final String tagline;
+  final String? tagline;
   final String title;
   final bool video;
   final double voteAverage;
