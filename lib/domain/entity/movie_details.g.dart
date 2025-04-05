@@ -7,6 +7,9 @@ part of 'movie_details.dart';
 // **************************************************************************
 
 MovieDetails _$MovieDetailsFromJson(Map<String, dynamic> json) => MovieDetails(
+  credits: MovieDetailsCredits.fromJson(
+    json['credits'] as Map<String, dynamic>,
+  ),
   adult: json['adult'] as bool,
   backdropPath: json['backdrop_path'] as String?,
   belongsToCollection: json['belongs_to_collection'] as Map<String, dynamic>?,
@@ -76,6 +79,7 @@ Map<String, dynamic> _$MovieDetailsToJson(
   'video': instance.video,
   'vote_average': instance.voteAverage,
   'vote_count': instance.voteCount,
+  'credits': instance.credits.toJson(),
 };
 
 Genre _$GenreFromJson(Map<String, dynamic> json) =>
