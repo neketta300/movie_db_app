@@ -1,4 +1,5 @@
 import 'package:moviedb_app_llf/domain/api_client/api_client.dart';
+import 'package:moviedb_app_llf/domain/entity/movie_details_credits.dart';
 import 'package:moviedb_app_llf/library/widgets/inherited/provider.dart';
 import 'package:moviedb_app_llf/ui/widgets/elements/radial_percent_widget.dart';
 import 'package:flutter/material.dart';
@@ -22,14 +23,17 @@ class MovieDetailsMainInfoWidget extends StatelessWidget {
           child: _DescriptionWidget(),
         ),
         const SizedBox(height: 30),
-        const _PeopleWidgets(),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10),
+          child: _PeopleWidgets(),
+        ),
       ],
     );
   }
 
   Text _OverviewWidget() {
     return const Text(
-      'Overview',
+      'Описание',
       style: TextStyle(
         color: Colors.white,
         fontSize: 16,
@@ -222,6 +226,53 @@ class _PeopleWidgets extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final model = NotifierProvider.watch<MovieDetailsModel>(context);
+    var crew = model?.movieDetails?.credits.crew;
+    if (crew == null || crew.isEmpty) return const SizedBox.shrink();
+    crew = crew.length > 4 ? crew.sublist(0, 4) : crew;
+    var crewChunks = <List<Employee>>[];
+    for (var i = 0; i < crew.length; i += 2) {
+      crewChunks.add(
+        crew.sublist(i, i + 2 > crew.length ? crew.length : i + 2),
+      );
+    }
+    return Column(
+      children:
+          crewChunks
+              .map(
+                (chunk) => Padding(
+                  padding: const EdgeInsets.only(bottom: 16),
+                  child: _PeopleWidgetRow(employes: chunk),
+                ),
+              )
+              .toList(),
+    );
+  }
+}
+
+class _PeopleWidgetRow extends StatelessWidget {
+  final List<Employee> employes;
+  const _PeopleWidgetRow({super.key, required this.employes});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children:
+          employes
+              .map((employee) => _PeopleWidgetRowItem(employee: employee))
+              .toList(),
+    );
+  }
+}
+
+class _PeopleWidgetRowItem extends StatelessWidget {
+  final Employee employee;
+  const _PeopleWidgetRowItem({super.key, required this.employee});
+
+  @override
+  Widget build(BuildContext context) {
     const nameStyle = TextStyle(
       color: Colors.white,
       fontSize: 16,
@@ -232,50 +283,14 @@ class _PeopleWidgets extends StatelessWidget {
       fontSize: 16,
       fontWeight: FontWeight.w400,
     );
-    return Column(
-      children: [
-        Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text('Stefano Sollima', style: nameStyle),
-                const Text('Director', style: jobTilteStyle),
-              ],
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text('Stefano Sollima', style: nameStyle),
-                const Text('Director', style: jobTilteStyle),
-              ],
-            ),
-          ],
-        ),
-        const SizedBox(height: 20),
-        Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text('Stefano Sollima', style: nameStyle),
-                const Text('Director', style: jobTilteStyle),
-              ],
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text('Stefano Sollima', style: nameStyle),
-                const Text('Director', style: jobTilteStyle),
-              ],
-            ),
-          ],
-        ),
-      ],
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(employee.name, style: nameStyle),
+          Text(employee.job, style: jobTilteStyle),
+        ],
+      ),
     );
   }
 }
