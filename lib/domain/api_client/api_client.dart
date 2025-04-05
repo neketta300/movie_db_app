@@ -172,7 +172,10 @@ class ApiClient {
       '/movie/$movieId',
       parser,
       <String, dynamic>{'authorization': _apiKeyHeader},
-      <String, dynamic>{'language': locale.toString()},
+      <String, dynamic>{
+        'language': locale.toString(),
+        'append_to_response': 'credits',
+      },
     );
     return result;
   }
