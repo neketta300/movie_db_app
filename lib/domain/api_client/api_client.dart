@@ -174,7 +174,7 @@ class ApiClient {
       <String, dynamic>{'authorization': _apiKeyHeader},
       <String, dynamic>{
         'language': locale.toString(),
-        'append_to_response': 'credits',
+        'append_to_response': 'videos,credits',
       },
     );
     return result;
