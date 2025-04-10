@@ -1,5 +1,6 @@
 import 'package:moviedb_app_llf/library/widgets/inherited/provider.dart';
 import 'package:moviedb_app_llf/ui/widgets/movie_details/movie_details_main_info_widget.dart';
+import 'package:moviedb_app_llf/ui/widgets/movie_details/movie_details_main_info_widget_model.dart';
 import 'package:moviedb_app_llf/ui/widgets/movie_details/movie_details_main_screen_cast_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:moviedb_app_llf/ui/widgets/movie_details/movie_details_model.dart';
@@ -42,7 +43,10 @@ class _BodyWidget extends StatelessWidget {
     }
     return ListView(
       children: [
-        const MovieDetailsMainInfoWidget(),
+        NotifierProvider(
+          create: () => MovieDetailsMainInfoWidgetModel(),
+          child: MovieDetailsMainInfoWidget(),
+        ),
         const SizedBox(height: 30),
         const MovieDetailsMainScreenCastWidget(),
       ],

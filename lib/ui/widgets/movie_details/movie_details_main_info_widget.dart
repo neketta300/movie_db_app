@@ -1,9 +1,9 @@
 import 'package:moviedb_app_llf/domain/api_client/api_client.dart';
 import 'package:moviedb_app_llf/domain/entity/movie_details_credits.dart';
 import 'package:moviedb_app_llf/library/widgets/inherited/provider.dart';
-import 'package:moviedb_app_llf/ui/navigation/main_navigation.dart';
 import 'package:moviedb_app_llf/ui/widgets/elements/radial_percent_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:moviedb_app_llf/ui/widgets/movie_details/movie_details_main_info_widget_model.dart';
 import 'package:moviedb_app_llf/ui/widgets/movie_details/movie_details_model.dart';
 
 class MovieDetailsMainInfoWidget extends StatelessWidget {
@@ -126,6 +126,9 @@ class _ScoreWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final model = NotifierProvider.read<MovieDetailsMainInfoWidgetModel>(
+      context,
+    );
     final movieDetails =
         NotifierProvider.watch<MovieDetailsModel>(context)?.movieDetails;
     var voteAverage = movieDetails?.voteAverage ?? 0;
@@ -164,11 +167,7 @@ class _ScoreWidget extends StatelessWidget {
         Container(width: 1, height: 15, color: Colors.grey),
         trailerKey != null
             ? TextButton(
-              onPressed:
-                  () => Navigator.of(context).pushNamed(
-                    MainNavigationRoutesName.movieTrailerWidget,
-                    arguments: trailerKey,
-                  ),
+              onPressed: () => model?.onPlayTrailerTap(context, trailerKey),
               child: Row(
                 children: [
                   const Icon(Icons.play_arrow, color: Colors.white30),
@@ -266,7 +265,7 @@ class _PeopleWidgets extends StatelessWidget {
 
 class _PeopleWidgetRow extends StatelessWidget {
   final List<Employee> employes;
-  const _PeopleWidgetRow({super.key, required this.employes});
+  const _PeopleWidgetRow({required this.employes});
 
   @override
   Widget build(BuildContext context) {
@@ -283,7 +282,7 @@ class _PeopleWidgetRow extends StatelessWidget {
 
 class _PeopleWidgetRowItem extends StatelessWidget {
   final Employee employee;
-  const _PeopleWidgetRowItem({super.key, required this.employee});
+  const _PeopleWidgetRowItem({required this.employee});
 
   @override
   Widget build(BuildContext context) {
