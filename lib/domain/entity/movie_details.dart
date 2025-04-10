@@ -1,6 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:moviedb_app_llf/domain/entity/movie_date_parser.dart';
 import 'package:moviedb_app_llf/domain/entity/movie_details_credits.dart';
+import 'package:moviedb_app_llf/domain/entity/movie_details_videos.dart';
 
 part 'movie_details.g.dart';
 
@@ -36,7 +37,9 @@ class MovieDetails {
   final double voteAverage;
   final int voteCount;
   final MovieDetailsCredits credits;
+  final MovieDetailsVideos videos;
   MovieDetails({
+    required this.videos,
     required this.credits,
     required this.adult,
     required this.backdropPath,
