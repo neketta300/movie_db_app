@@ -38,7 +38,7 @@ class MovieDetailsMainScreenCastWidget extends StatelessWidget {
 }
 
 class _ActorListWidget extends StatelessWidget {
-  const _ActorListWidget({super.key});
+  const _ActorListWidget();
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +58,7 @@ class _ActorListWidget extends StatelessWidget {
 
 class _ActorListItemWidget extends StatelessWidget {
   final int actorIndex;
-  const _ActorListItemWidget({super.key, required this.actorIndex});
+  const _ActorListItemWidget({required this.actorIndex});
 
   @override
   Widget build(BuildContext context) {

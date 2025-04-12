@@ -30,8 +30,10 @@ class AuthModel extends ChangeNotifier {
     _isAuthProgress = true;
     notifyListeners();
     String? sessionId;
+    int? accountId;
     try {
       sessionId = await _apiClient.auth(username: login, password: password);
+      accountId = await _apiClient.getAccountId(sessionId);
     } on ApiClientException catch (e) {
       switch (e.type) {
         case ApiCLientExceptionType.network:
@@ -39,6 +41,9 @@ class AuthModel extends ChangeNotifier {
           break;
         case ApiCLientExceptionType.auth:
           _errorMessage = 'Неправильный логин или пароль';
+          break;
+        case ApiCLientExceptionType.sessionExpired:
+          _errorMessage = 'Произошла ошибка. Срок сессии истек';
           break;
         case ApiCLientExceptionType.other:
           _errorMessage = 'Произошла ошибка. Попробуйте еще раз';
@@ -51,12 +56,13 @@ class AuthModel extends ChangeNotifier {
       return;
     }
 
-    if (sessionId == null) {
+    if (sessionId == null || accountId == null) {
       _errorMessage = 'Неизвестная ошибка, поторите попытку';
       notifyListeners();
       return;
     }
     await _sessionDataProvider.setSessionId(sessionId);
+    await _sessionDataProvider.setAccountId(accountId);
     Navigator.of(
       context,
     ).pushReplacementNamed(MainNavigationRoutesName.mainScreen);

@@ -83,7 +83,7 @@ class _InheritedNotifierProvider<Model extends ChangeNotifier>
 
 class Provider<Model> extends InheritedWidget {
   final Model model;
-  const Provider(this.model, {super.key, required super.child});
+  const Provider({super.key, required this.model, required super.child});
 
   static Model? watch<Model>(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType<Provider<Model>>()?.model;

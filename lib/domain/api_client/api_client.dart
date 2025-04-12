@@ -4,12 +4,25 @@ import 'dart:io';
 import 'package:moviedb_app_llf/domain/entity/movie_details.dart';
 import 'package:moviedb_app_llf/domain/entity/popular_movie_response.dart';
 
-enum ApiCLientExceptionType { network, auth, other }
+enum ApiCLientExceptionType { network, auth, other, sessionExpired }
 
 class ApiClientException implements Exception {
   final ApiCLientExceptionType type;
 
   ApiClientException(this.type);
+}
+
+enum MediaType { movie, tv }
+
+extension MediaTypeAsString on MediaType {
+  String asString() {
+    switch (this) {
+      case MediaType.movie:
+        return 'movie';
+      case MediaType.tv:
+        return 'tv';
+    }
+  }
 }
 
 class ApiClient {
@@ -36,10 +49,10 @@ class ApiClient {
     return sessionId;
   }
 
-  Uri _makeUri(String path, [Map<String, dynamic>? parameters]) {
+  Uri _makeUri(String path, [Map<String, dynamic>? queryParameters]) {
     final uri = Uri.parse('$_host$path');
-    if (parameters != null) {
-      return uri.replace(queryParameters: parameters);
+    if (queryParameters != null) {
+      return uri.replace(queryParameters: queryParameters);
     } else {
       return uri;
     }
@@ -47,21 +60,21 @@ class ApiClient {
 
   Future<T> _get<T>(
     String path,
-    T Function(dynamic json) parser,
-    Map<String, dynamic> headers, [
-    Map<String, dynamic>? parameters,
+    T Function(dynamic json) parser, [
+    Map<String, dynamic>? headers,
+    Map<String, dynamic>? queryParameters,
   ]) async {
-    final url = _makeUri(path, parameters);
+    final url = _makeUri(path, queryParameters);
     try {
       final request = await _client.getUrl(url);
       // Добавляем заголовки из параметра headers
-      headers.forEach((key, value) {
+      headers?.forEach((key, value) {
         request.headers.add(key, value.toString());
       });
       final response = await request.close();
       final dynamic json = (await response.jsonDecode());
 
-      _validateREsponse(response, json);
+      _validateResponse(response, json);
 
       final result = parser(json);
       return result;
@@ -79,9 +92,9 @@ class ApiClient {
     T Function(dynamic json) parser,
     Map<String, dynamic> headers,
     Map<String, dynamic> bodyParameters, [
-    Map<String, dynamic>? urlParameters,
+    Map<String, dynamic>? queryParameters,
   ]) async {
-    final url = _makeUri(path, urlParameters);
+    final url = _makeUri(path, queryParameters);
     try {
       final request = await _client.postUrl(url);
 
@@ -89,12 +102,11 @@ class ApiClient {
         request.headers.add(key, value.toString());
       });
       request.headers.contentType = ContentType.json;
-
       request.write(jsonEncode(bodyParameters));
       final response = await request.close();
       final dynamic json = (await response.jsonDecode());
 
-      _validateREsponse(response, json);
+      _validateResponse(response, json);
 
       final result = parser(json);
       return result;
@@ -133,6 +145,20 @@ class ApiClient {
       <String, dynamic>{'authorization': _apiKeyHeader},
       <String, dynamic>{'language': locale.toString(), 'page': page.toString()},
     );
+    return result;
+  }
+
+  Future<int> getAccountId(String sessionId) async {
+    final parser = (dynamic json) {
+      final jsonMap = json as Map<String, dynamic>;
+      final result = jsonMap['id'] as int;
+      return result;
+    };
+
+    final result = _get('/account', parser, null, <String, dynamic>{
+      'api_key': _apiKey,
+      'session_id': sessionId,
+    });
     return result;
   }
 
@@ -180,6 +206,22 @@ class ApiClient {
     return result;
   }
 
+  Future<bool> isFilmFavorite(int movieId, String sessionId) async {
+    final parser = (dynamic json) {
+      final jsonMap = json as Map<String, dynamic>;
+      final result = jsonMap['favorite'] as bool;
+      return result;
+    };
+
+    final result = _get(
+      '/movie/$movieId/account_states',
+      parser,
+      <String, dynamic>{'authorization': _apiKeyHeader},
+      <String, dynamic>{'sessio_id': sessionId},
+    );
+    return result;
+  }
+
   Future<String> _validateUser({
     required String username,
     required String password,
@@ -191,7 +233,7 @@ class ApiClient {
       return token;
     };
 
-    final parameters = <String, dynamic>{
+    final bodyParameters = <String, dynamic>{
       'username': username,
       'password': password,
       'request_token': requestToken,
@@ -201,7 +243,39 @@ class ApiClient {
       '/authentication/token/validate_with_login',
       parser,
       <String, dynamic>{'authorization': _apiKeyHeader},
-      parameters,
+      bodyParameters,
+    );
+    return result;
+  }
+
+  Future<int> addFavorite({
+    required int accountId,
+    required String sessionId,
+    required MediaType mediaType,
+    required int mediaId,
+    required bool isFavorite,
+  }) async {
+    final parser = (dynamic json) {
+      return 1;
+    };
+
+    final headers = <String, dynamic>{
+      'authorization': _apiKeyHeader,
+      'accept': 'application/json',
+    };
+    final bodyParameters = <String, dynamic>{
+      'media_type': mediaType.asString(),
+      'media_id': mediaId,
+      'favorite': isFavorite,
+    };
+    final queryParameters = <String, dynamic>{'session_id': sessionId};
+
+    final result = _post(
+      '/account/$accountId/favorite',
+      parser,
+      headers,
+      bodyParameters,
+      queryParameters,
     );
     return result;
   }
@@ -213,23 +287,25 @@ class ApiClient {
       return sessionId;
     };
 
-    final parameters = <String, dynamic>{'request_token': requestToken};
+    final bodyParameters = <String, dynamic>{'request_token': requestToken};
 
     final result = _post(
       '/authentication/session/new',
       parser,
       <String, dynamic>{'authorization': _apiKeyHeader},
-      parameters,
+      bodyParameters,
     );
     return result;
   }
 
-  void _validateREsponse(HttpClientResponse response, dynamic json) {
+  void _validateResponse(HttpClientResponse response, dynamic json) {
     if (response.statusCode == 401) {
       final dynamic status = json['status_code'];
       final code = status is int ? status : 0;
       if (code == 30) {
         throw ApiClientException(ApiCLientExceptionType.auth);
+      } else if (code == 3) {
+        throw ApiClientException(ApiCLientExceptionType.sessionExpired);
       } else {
         throw ApiClientException(ApiCLientExceptionType.other);
       }

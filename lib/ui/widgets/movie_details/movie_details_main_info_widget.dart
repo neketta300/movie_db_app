@@ -1,6 +1,7 @@
 import 'package:moviedb_app_llf/domain/api_client/api_client.dart';
 import 'package:moviedb_app_llf/domain/entity/movie_details_credits.dart';
 import 'package:moviedb_app_llf/library/widgets/inherited/provider.dart';
+import 'package:moviedb_app_llf/ui/theme/app_colors.dart';
 import 'package:moviedb_app_llf/ui/widgets/elements/radial_percent_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:moviedb_app_llf/ui/widgets/movie_details/movie_details_main_info_widget_model.dart';
@@ -85,6 +86,19 @@ class _TopPosterWidget extends StatelessWidget {
                 posterPath != null
                     ? Image.network(ApiClient.imageUrl(posterPath))
                     : const SizedBox.shrink(),
+          ),
+          Positioned(
+            top: 5,
+            right: 5,
+            child: IconButton(
+              onPressed: () => model?.toggleFavorite(),
+              icon: Icon(
+                model?.isFavorite == true
+                    ? (Icons.favorite)
+                    : (Icons.favorite_border_rounded),
+                color: AppColors.mainDarkBlue,
+              ),
+            ),
           ),
         ],
       ),
