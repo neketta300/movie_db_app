@@ -1,3 +1,5 @@
 {
- "cmake.sourceDirectory": "C:/flProject/moviedb_app_llf/linux"
+ "cmake.sourceDirectory": "C:/flProject/moviedb_app_llf/linux",
+ "java.configuration.updateBuildConfiguration": "interactive",
+ "cmake.ignoreCMakeListsMissing": true
 }

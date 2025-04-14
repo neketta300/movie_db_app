@@ -1,6 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:nativewrappers/_internal/vm/lib/ffi_allocation_patch.dart';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -46,14 +43,7 @@ class MovieDetailsModel extends ChangeNotifier {
       }
       notifyListeners();
     } on ApiClientException catch (e) {
-      switch (e.type) {
-        case ApiCLientExceptionType.sessionExpired:
-          await onSessionExpired?.call();
-          break;
-
-        default:
-          print(e);
-      }
+      _handleApiClientException(e);
     }
   }
 
@@ -64,6 +54,7 @@ class MovieDetailsModel extends ChangeNotifier {
       if (accountId == null || sessionId == null) return;
       _isFavorite = !_isFavorite;
       notifyListeners();
+
       await _apiClient.addFavorite(
         accountId: accountId,
         sessionId: 'sessionId',
@@ -72,14 +63,17 @@ class MovieDetailsModel extends ChangeNotifier {
         isFavorite: _isFavorite,
       );
     } on ApiClientException catch (e) {
-      switch (e.type) {
-        case ApiCLientExceptionType.sessionExpired:
-          await onSessionExpired?.call();
-          break;
+      _handleApiClientException(e);
+    }
+  }
 
-        default:
-          print(e);
-      }
+  void _handleApiClientException(ApiClientException execption) {
+    switch (execption.type) {
+      case ApiCLientExceptionType.sessionExpired:
+        onSessionExpired?.call();
+        break;
+      default:
+        print(execption);
     }
   }
 }
