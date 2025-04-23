@@ -1,55 +1,44 @@
 import 'package:flutter/material.dart';
-import 'package:moviedb_app_llf/library/widgets/inherited/provider.dart';
+import 'package:moviedb_app_llf/domain/factoryes/screen_factory.dart';
+
 import 'package:moviedb_app_llf/library/widgets/movie_trailer/movie_trailer.dart';
-import 'package:moviedb_app_llf/ui/widgets/auth/auth_model.dart';
-import 'package:moviedb_app_llf/ui/widgets/auth/auth_widget.dart';
-import 'package:moviedb_app_llf/ui/widgets/main_screen/main_screen_widget.dart';
-import 'package:moviedb_app_llf/ui/widgets/movie_details/movie_details_model.dart';
-import 'package:moviedb_app_llf/ui/widgets/movie_details/movie_details_widget.dart';
 
 class MainNavigationRoutesName {
   static const auth = 'auth';
-  static const mainScreen = '/';
-  static const movieDetails = '/movie_details';
+  static const mainScreen = '/mainc_screen';
+  static const movieDetails = '/mainc_screen/movie_details';
   static const movieTrailerWidget = '/movie_details/trailers';
+  static const loaderWidget = '/';
 }
 
 class MainNavigation {
-  String initialRoute(bool isAuth) =>
-      isAuth
-          ? MainNavigationRoutesName.mainScreen
-          : MainNavigationRoutesName.auth;
+  // делаем статик чтобы она появилась первее чем переменная routes
+  static final _screenFactory = ScreenFactory();
 
+  // роуты без параметеров
   final routes = <String, Widget Function(BuildContext)>{
-    MainNavigationRoutesName.auth:
-        (context) => NotifierProvider(
-          create: () => AuthModel(),
-          child: const AuthWidget(),
-        ),
-    MainNavigationRoutesName.mainScreen: (context) => const MainScreenWidget(),
+    MainNavigationRoutesName.loaderWidget: (_) => _screenFactory.makeLoader(),
+    MainNavigationRoutesName.auth: (_) => _screenFactory.makeAuth(),
+    MainNavigationRoutesName.mainScreen: (_) => _screenFactory.makeMainScreen(),
   };
-
+  // онГенерейтРоуты с переменными
   Route<Object> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
       case MainNavigationRoutesName.movieDetails:
         final arguments = settings.arguments;
         final movieId = arguments is int ? arguments : 0;
         return MaterialPageRoute(
-          builder:
-              (context) => NotifierProvider(
-                create: () => MovieDetailsModel(movieId: movieId),
-                child: MovieDetailsWidget(),
-              ),
+          builder: (_) => _screenFactory.makeMovieDetails(movieId),
         );
       case MainNavigationRoutesName.movieTrailerWidget:
         final arguments = settings.arguments;
         final youTubeKey = arguments is String ? arguments : '';
         return MaterialPageRoute(
-          builder: (context) => MovieTrailerWidget(youTubeKey: youTubeKey),
+          builder: (_) => MovieTrailerWidget(youTubeKey: youTubeKey),
         );
       default:
         const widget = Text('Navigation error');
-        return MaterialPageRoute(builder: (context) => widget);
+        return MaterialPageRoute(builder: (_) => widget);
     }
   }
 }
