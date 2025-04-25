@@ -8,7 +8,11 @@ import 'package:moviedb_app_llf/domain/entity/popular_movie_response.dart';
 class MovieApiClient {
   final _networkClient = NetworkClient();
 
-  Future<PopularMovieResponse> popularMovies(int page, String locale) async {
+  Future<PopularMovieResponse> popularMovies(
+    int page,
+    String locale,
+    String apiKeyHeader,
+  ) async {
     PopularMovieResponse parser(dynamic json) {
       final jsonMap = json as Map<String, dynamic>;
       final response = PopularMovieResponse.fromJson(jsonMap);
@@ -18,7 +22,7 @@ class MovieApiClient {
     final result = _networkClient.get(
       '/movie/popular',
       parser,
-      <String, dynamic>{'authorization': Configuration.apiKeyHeader},
+      <String, dynamic>{'authorization': apiKeyHeader},
       <String, dynamic>{'language': locale.toString(), 'page': page.toString()},
     );
     return result;
@@ -28,6 +32,7 @@ class MovieApiClient {
     int page,
     String locale,
     String query,
+    String apiKeyHeader,
   ) async {
     PopularMovieResponse parser(dynamic json) {
       final jsonMap = json as Map<String, dynamic>;
@@ -38,7 +43,7 @@ class MovieApiClient {
     final result = _networkClient.get(
       '/search/movie',
       parser,
-      <String, dynamic>{'authorization': Configuration.apiKey},
+      <String, dynamic>{'authorization': apiKeyHeader},
       <String, dynamic>{
         'query': query,
         'include_adult': true.toString(),
@@ -59,7 +64,7 @@ class MovieApiClient {
     final result = _networkClient.get(
       '/movie/$movieId',
       parser,
-      <String, dynamic>{'authorization': Configuration.apiKeyHeader},
+      <String, dynamic>{'authorization': Configuration.apiKey},
       <String, dynamic>{
         'language': locale.toString(),
         'append_to_response': 'videos,credits',

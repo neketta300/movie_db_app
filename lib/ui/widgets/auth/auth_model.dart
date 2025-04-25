@@ -31,7 +31,8 @@ class AuthModel extends ChangeNotifier {
           return 'Неправильный логин или пароль';
         case ApiCLientExceptionType.sessionExpired:
           return 'Произошла ошибка. Срок сессии истек';
-
+        case ApiCLientExceptionType.apiKey:
+          return 'Неверный ApiKey';
         case ApiCLientExceptionType.other:
           return 'Произошла ошибка. Попробуйте еще раз';
       }

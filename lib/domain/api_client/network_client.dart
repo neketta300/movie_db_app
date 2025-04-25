@@ -85,6 +85,8 @@ class NetworkClient {
         throw ApiClientException(ApiCLientExceptionType.auth);
       } else if (code == 3) {
         throw ApiClientException(ApiCLientExceptionType.sessionExpired);
+      } else if (code == 7) {
+        throw ApiClientException(ApiCLientExceptionType.apiKey);
       } else {
         throw ApiClientException(ApiCLientExceptionType.other);
       }
@@ -94,9 +96,13 @@ class NetworkClient {
 
 extension HttpClientResponseJsonDecode on HttpClientResponse {
   Future<dynamic> jsonDecode() async {
-    return transform(utf8.decoder)
-        .toList()
-        .then((value) => value.join())
-        .then<dynamic>((v) => json.decode(v));
+    try {
+      return transform(utf8.decoder)
+          .toList()
+          .then((value) => value.join())
+          .then<dynamic>((v) => json.decode(v));
+    } catch (e) {
+      print(e);
+    }
   }
 }
