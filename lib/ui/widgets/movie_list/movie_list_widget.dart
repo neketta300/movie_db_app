@@ -1,4 +1,4 @@
-import 'package:moviedb_app_llf/domain/api_client/api_client.dart';
+import 'package:moviedb_app_llf/domain/api_client/image_downloader.dart';
 import 'package:moviedb_app_llf/library/widgets/inherited/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:moviedb_app_llf/ui/widgets/movie_list/movie_list_model.dart';
@@ -45,7 +45,7 @@ class MovieListWidget extends StatelessWidget {
                       children: [
                         posterPath != null
                             ? Image.network(
-                              ApiClient.imageUrl(posterPath),
+                              ImageDownloader.imageUrl(posterPath),
                               width: 95,
                             )
                             : const SizedBox.shrink(),

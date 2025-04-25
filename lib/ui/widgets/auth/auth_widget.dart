@@ -1,7 +1,7 @@
-import 'package:moviedb_app_llf/library/widgets/inherited/provider.dart';
 import 'package:moviedb_app_llf/ui/theme/app_button_style.dart';
 import 'package:moviedb_app_llf/ui/widgets/auth/auth_model.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class AuthWidget extends StatefulWidget {
   const AuthWidget({super.key});
@@ -72,7 +72,8 @@ class _FormWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = NotifierProvider.read<AuthModel>(context);
+    final model =
+        context.read<AuthModel>(); //NotifierProvider.read<AuthModel>(context);
     const textStyle = TextStyle(fontSize: 16, color: Color(0xFF212529));
     const textFieldDecorator = InputDecoration(
       border: OutlineInputBorder(),
@@ -89,14 +90,14 @@ class _FormWidget extends StatelessWidget {
         const Text('Username', style: textStyle),
         const SizedBox(height: 5),
         TextField(
-          controller: model?.loginTextController,
+          controller: model.loginTextController,
           decoration: textFieldDecorator,
         ),
         const SizedBox(height: 20),
         const Text('Password', style: textStyle),
         const SizedBox(height: 5),
         TextField(
-          controller: model?.passwordTextController,
+          controller: model.passwordTextController,
           decoration: textFieldDecorator,
           obscureText: true,
         ),
@@ -122,12 +123,11 @@ class _AuthButtonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = NotifierProvider.watch<AuthModel>(context);
+    final model = context.watch<AuthModel>();
     const color = Color(0xFF01B4E4);
-    final onPressed =
-        model?.canStartAuth == true ? () => model?.auth(context) : null;
+    final onPressed = model.canStartAuth ? () => model.auth(context) : null;
     final child =
-        model?.isAuthProgress == true
+        model.isAuthProgress == true
             ? const SizedBox(
               width: 15,
               height: 15,
@@ -156,8 +156,7 @@ class _ErrorMessageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final errorMessage =
-        NotifierProvider.watch<AuthModel>(context)?.errorMessage;
+    final errorMessage = context.select((AuthModel m) => m.errorMessage);
     if (errorMessage == null) return const SizedBox.shrink();
 
     return Padding(

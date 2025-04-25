@@ -41,4 +41,11 @@ class MainNavigation {
         return MaterialPageRoute(builder: (_) => widget);
     }
   }
+
+  static void resetNavigatiob(BuildContext context) {
+    Navigator.of(context).pushNamedAndRemoveUntil(
+      MainNavigationRoutesName.loaderWidget,
+      (route) => false,
+    );
+  }
 }

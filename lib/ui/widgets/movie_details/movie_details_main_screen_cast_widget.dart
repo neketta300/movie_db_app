@@ -1,4 +1,4 @@
-import 'package:moviedb_app_llf/domain/api_client/api_client.dart';
+import 'package:moviedb_app_llf/domain/api_client/image_downloader.dart';
 import 'package:moviedb_app_llf/library/widgets/inherited/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:moviedb_app_llf/ui/widgets/movie_details/movie_details_model.dart';
@@ -86,7 +86,7 @@ class _ActorListItemWidget extends StatelessWidget {
           child: Column(
             children: [
               actorProfilePath != null
-                  ? Image.network(ApiClient.imageUrl(actorProfilePath))
+                  ? Image.network(ImageDownloader.imageUrl(actorProfilePath))
                   : const SizedBox.shrink(),
               Expanded(
                 child: Padding(

@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:moviedb_app_llf/domain/api_client/account_api_client.dart';
 
-import 'package:moviedb_app_llf/domain/api_client/api_client.dart';
+import 'package:moviedb_app_llf/domain/api_client/movie_api_client.dart';
+import 'package:moviedb_app_llf/domain/api_client/api_client_exception.dart';
 import 'package:moviedb_app_llf/domain/data_providers/session_data_provider.dart';
 import 'package:moviedb_app_llf/domain/entity/movie_details.dart';
 
 class MovieDetailsModel extends ChangeNotifier {
   final _sessionDataProvider = SessionDataProvider();
-  final _apiClient = ApiClient();
+  final _movieApiClient = MovieApiClient();
+  final _accountApiClient = AccountApiClient();
 
   final int movieId;
   late DateFormat _dateFomat;
@@ -36,10 +39,10 @@ class MovieDetailsModel extends ChangeNotifier {
 
   Future<void> loadDetails() async {
     try {
-      _movieDetails = await _apiClient.movieDetails(movieId, _locale);
+      _movieDetails = await _movieApiClient.movieDetails(movieId, _locale);
       final sessionId = await _sessionDataProvider.getSessionId();
       if (sessionId != null) {
-        _isFavorite = await _apiClient.isFilmFavorite(movieId, sessionId);
+        _isFavorite = await _movieApiClient.isFilmFavorite(movieId, sessionId);
       }
       notifyListeners();
     } on ApiClientException catch (e) {
@@ -55,7 +58,7 @@ class MovieDetailsModel extends ChangeNotifier {
       _isFavorite = !_isFavorite;
       notifyListeners();
 
-      await _apiClient.addFavorite(
+      await _accountApiClient.addFavorite(
         accountId: accountId,
         sessionId: 'sessionId',
         mediaType: MediaType.movie,
