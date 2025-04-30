@@ -1,7 +1,7 @@
 import 'package:moviedb_app_llf/domain/api_client/image_downloader.dart';
-import 'package:moviedb_app_llf/library/widgets/inherited/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:moviedb_app_llf/ui/widgets/movie_details/movie_details_model.dart';
+import 'package:provider/provider.dart';
 
 class MovieDetailsMainScreenCastWidget extends StatelessWidget {
   const MovieDetailsMainScreenCastWidget({super.key});
@@ -42,11 +42,10 @@ class _ActorListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = NotifierProvider.watch<MovieDetailsModel>(context);
-    var crew = model?.movieDetails?.credits.crew;
-    if (crew == null || crew.isEmpty) return const SizedBox.shrink();
+    var data = context.select((MovieDetailsModel m) => m.data.actorsData);
+    if (data.isEmpty) return const SizedBox.shrink();
     return ListView.builder(
-      itemCount: 20,
+      itemCount: data.length,
       itemExtent: 120,
       scrollDirection: Axis.horizontal,
       itemBuilder: (BuildContext context, int index) {
@@ -62,8 +61,8 @@ class _ActorListItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = NotifierProvider.read<MovieDetailsModel>(context);
-    final actor = model!.movieDetails!.credits.cast![actorIndex];
+    final model = context.read<MovieDetailsModel>();
+    final actor = model.data.actorsData[actorIndex];
     final actorProfilePath = actor.profilePath;
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -85,9 +84,8 @@ class _ActorListItemWidget extends StatelessWidget {
           clipBehavior: Clip.hardEdge,
           child: Column(
             children: [
-              actorProfilePath != null
-                  ? Image.network(ImageDownloader.imageUrl(actorProfilePath))
-                  : const SizedBox.shrink(),
+              if (actorProfilePath != null)
+                Image.network(ImageDownloader.imageUrl(actorProfilePath)),
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),

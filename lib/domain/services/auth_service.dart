@@ -22,4 +22,9 @@ class AuthService {
     await _sessionDataProvider.setSessionId(sessionId);
     await _sessionDataProvider.setAccountId(accountId);
   }
+
+  Future<void> logout() async {
+    await _sessionDataProvider.deleteAccountId();
+    await _sessionDataProvider.deleteSessionId();
+  }
 }

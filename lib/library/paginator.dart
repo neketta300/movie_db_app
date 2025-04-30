@@ -9,6 +9,7 @@ class PaginatorLoadResult<T> {
   });
 }
 
+// создание нового типа с названием PaginatorLoad<T> - хранит в себе функцию
 typedef PaginatorLoad<T> = Future<PaginatorLoadResult<T>> Function(int);
 
 class Paginator<T> {

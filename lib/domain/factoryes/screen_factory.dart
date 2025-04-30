@@ -1,6 +1,4 @@
 import 'package:flutter/widgets.dart';
-import 'package:moviedb_app_llf/library/widgets/inherited/provider.dart'
-    as old_provider;
 import 'package:moviedb_app_llf/library/widgets/movie_trailer/movie_trailer.dart';
 import 'package:moviedb_app_llf/ui/widgets/auth/auth_model.dart';
 import 'package:moviedb_app_llf/ui/widgets/auth/auth_widget.dart';
@@ -34,8 +32,8 @@ class ScreenFactory {
   Widget makeMainScreen() => const MainScreenWidget();
 
   Widget makeMovieDetails(int movieId) {
-    return old_provider.NotifierProvider(
-      create: () => MovieDetailsModel(movieId: movieId),
+    return ChangeNotifierProvider(
+      create: (_) => MovieDetailsModel(movieId: movieId),
       child: MovieDetailsWidget(),
     );
   }

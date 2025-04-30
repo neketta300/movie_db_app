@@ -55,7 +55,7 @@ class AuthModel extends ChangeNotifier {
 
     _errorMessage = await _login(login, password);
     if (_errorMessage == null) {
-      MainNavigation.resetNavigatiob(context);
+      MainNavigation.resetNavigation(context);
     } else {
       _updateState(_errorMessage, false);
     }

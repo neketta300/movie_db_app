@@ -22,7 +22,7 @@ class MovieApiClient {
     final result = _networkClient.get(
       '/movie/popular',
       parser,
-      <String, dynamic>{'authorization': apiKeyHeader},
+      <String, dynamic>{'Authorization': apiKeyHeader},
       <String, dynamic>{'language': locale.toString(), 'page': page.toString()},
     );
     return result;
@@ -43,7 +43,7 @@ class MovieApiClient {
     final result = _networkClient.get(
       '/search/movie',
       parser,
-      <String, dynamic>{'authorization': apiKeyHeader},
+      <String, dynamic>{'Authorization': apiKeyHeader},
       <String, dynamic>{
         'query': query,
         'include_adult': true.toString(),
@@ -64,7 +64,7 @@ class MovieApiClient {
     final result = _networkClient.get(
       '/movie/$movieId',
       parser,
-      <String, dynamic>{'authorization': Configuration.apiKey},
+      <String, dynamic>{'Authorization': Configuration.apiKeyHeader},
       <String, dynamic>{
         'language': locale.toString(),
         'append_to_response': 'videos,credits',
@@ -89,8 +89,3 @@ class MovieApiClient {
     return result;
   }
 }
-
-/*
-30
-
-*/

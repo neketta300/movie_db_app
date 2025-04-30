@@ -1,10 +1,9 @@
-import 'package:moviedb_app_llf/library/widgets/inherited/provider.dart';
-import 'package:moviedb_app_llf/ui/widgets/app/my_app_model.dart';
 import 'package:moviedb_app_llf/ui/widgets/movie_details/movie_details_main_info_widget.dart';
 import 'package:moviedb_app_llf/ui/widgets/movie_details/movie_details_main_info_widget_model.dart';
 import 'package:moviedb_app_llf/ui/widgets/movie_details/movie_details_main_screen_cast_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:moviedb_app_llf/ui/widgets/movie_details/movie_details_model.dart';
+import 'package:provider/provider.dart';
 
 class MovieDetailsWidget extends StatefulWidget {
   const MovieDetailsWidget({super.key});
@@ -15,17 +14,14 @@ class MovieDetailsWidget extends StatefulWidget {
 
 class _MovieDetailsWidgetState extends State<MovieDetailsWidget> {
   @override
-  void initState() {
-    super.initState();
-    final model = NotifierProvider.read<MovieDetailsModel>(context);
-    final appModel = Provider.read<MyAppModel>(context);
-    model?.onSessionExpired = () => appModel?.resetSession(context);
-  }
-
-  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    NotifierProvider.read<MovieDetailsModel>(context)?.setUpLocale(context);
+
+    // делается не сразу а на следующем витке iventloop
+    // то есть ждет пока дерево сначала достроится и потом вызывает ребилд
+    Future.microtask(
+      () => context.read<MovieDetailsModel>().setUpLocale(context),
+    );
   }
 
   @override
@@ -45,15 +41,16 @@ class _BodyWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = NotifierProvider.watch<MovieDetailsModel>(context);
-    final movieDetails = model?.movieDetails;
-    if (movieDetails == null) {
+    final isLoading = context.select(
+      (MovieDetailsModel model) => model.data.isLoading,
+    );
+    if (isLoading) {
       return Center(child: CircularProgressIndicator());
     }
     return ListView(
       children: [
-        NotifierProvider(
-          create: () => MovieDetailsMainInfoWidgetModel(),
+        ChangeNotifierProvider(
+          create: (_) => MovieDetailsMainInfoWidgetModel(),
           child: MovieDetailsMainInfoWidget(),
         ),
         const SizedBox(height: 30),
@@ -69,10 +66,7 @@ class _TitleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = NotifierProvider.watch<MovieDetailsModel>(context);
-    return Text(
-      model?.movieDetails?.title ?? 'Загрузка...',
-      style: TextStyle(color: Colors.white),
-    );
+    final title = context.select((MovieDetailsModel model) => model.data.title);
+    return Text(title, style: TextStyle(color: Colors.white));
   }
 }

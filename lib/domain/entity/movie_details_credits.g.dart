@@ -13,8 +13,8 @@ MovieDetailsCredits _$MovieDetailsCreditsFromJson(Map<String, dynamic> json) =>
               ?.map((e) => Actors.fromJson(e as Map<String, dynamic>))
               .toList(),
       crew:
-          (json['crew'] as List<dynamic>?)
-              ?.map((e) => Employee.fromJson(e as Map<String, dynamic>))
+          (json['crew'] as List<dynamic>)
+              .map((e) => Employee.fromJson(e as Map<String, dynamic>))
               .toList(),
     );
 
@@ -22,7 +22,7 @@ Map<String, dynamic> _$MovieDetailsCreditsToJson(
   MovieDetailsCredits instance,
 ) => <String, dynamic>{
   'cast': instance.cast?.map((e) => e.toJson()).toList(),
-  'crew': instance.crew?.map((e) => e.toJson()).toList(),
+  'crew': instance.crew.map((e) => e.toJson()).toList(),
 };
 
 Actors _$ActorsFromJson(Map<String, dynamic> json) => Actors(

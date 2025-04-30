@@ -33,7 +33,7 @@ class _MainScreenWidgetState extends State<MainScreenWidget> {
         title: const Text('TMDB', style: TextStyle(color: Colors.white)),
         actions: [
           IconButton(
-            onPressed: () => SessionDataProvider().setSessionId(null),
+            onPressed: () => SessionDataProvider().deleteSessionId(),
             icon: const Icon(Icons.search, color: Colors.white),
           ),
         ],

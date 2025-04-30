@@ -42,7 +42,7 @@ class MainNavigation {
     }
   }
 
-  static void resetNavigatiob(BuildContext context) {
+  static void resetNavigation(BuildContext context) {
     Navigator.of(context).pushNamedAndRemoveUntil(
       MainNavigationRoutesName.loaderWidget,
       (route) => false,

@@ -1,11 +1,7 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
-import 'package:moviedb_app_llf/domain/api_client/movie_api_client.dart';
 import 'package:moviedb_app_llf/domain/entity/movie.dart';
-import 'package:moviedb_app_llf/domain/entity/popular_movie_response.dart';
 import 'package:moviedb_app_llf/domain/services/movie_service.dart';
 import 'package:moviedb_app_llf/library/paginator.dart';
 import 'package:moviedb_app_llf/ui/navigation/main_navigation.dart';
@@ -34,7 +30,8 @@ class MovieListViewModel extends ChangeNotifier {
   Timer? searchDeboubce; // таймер для паузы между запросами при поиске фильмов
 
   var _movies = <MovieListRowData>[];
-  late DateFormat _dateFomat;
+  late DateFormat
+  _dateFomat; // внутри него конструктор который форматирует дату
   String? _seacrhQuery;
 
   List<MovieListRowData> get movies => List.unmodifiable(_movies);
@@ -99,21 +96,6 @@ class MovieListViewModel extends ChangeNotifier {
       _movies = _popularMoviePaginator.data.map(_makeRowData).toList();
     }
     notifyListeners();
-    // if (_isLoadingInProgres || _currentPage >= _totalPage) return;
-    // _isLoadingInProgres = true;
-    // final nextPage = _currentPage + 1;
-
-    // try {
-    //   final moviesResponse = await _loadMovies(nextPage, _locale);
-    //   _currentPage = moviesResponse.page;
-    //   _totalPage = moviesResponse.totalPages;
-
-    //   _movies.addAll(moviesResponse.movies.map(_makeRowData).toList());
-    //   _isLoadingInProgres = false;
-    //   notifyListeners();
-    // } catch (e) {
-    //   _isLoadingInProgres = false;
-    // }
   }
 
   MovieListRowData _makeRowData(Movie movie) {
