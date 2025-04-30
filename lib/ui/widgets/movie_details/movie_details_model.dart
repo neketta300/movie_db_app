@@ -25,13 +25,26 @@ class MovieDetailsActorData {
 class MovieDetailsPosterData {
   final String? backdropPath;
   final String? posterPath;
-  final IconData favoriteIcon;
-
+  IconData get favoriteIcon =>
+      isFavorite ? Icons.favorite : Icons.favorite_outline;
+  final bool isFavorite;
   MovieDetailsPosterData({
     this.backdropPath,
     this.posterPath,
-    required this.favoriteIcon,
+    this.isFavorite = false,
   });
+
+  MovieDetailsPosterData copyWith({
+    String? backdropPath,
+    String? posterPath,
+    bool? isFavorite,
+  }) {
+    return MovieDetailsPosterData(
+      backdropPath: backdropPath ?? this.backdropPath,
+      posterPath: posterPath ?? this.posterPath,
+      isFavorite: isFavorite ?? this.isFavorite,
+    );
+  }
 }
 
 class MovieDetailsNameData {
@@ -59,9 +72,7 @@ class MovieDetailsData {
   String title = '';
   String overview = '';
   bool isLoading = true;
-  MovieDetailsPosterData posterData = MovieDetailsPosterData(
-    favoriteIcon: Icons.favorite_border_rounded,
-  );
+  MovieDetailsPosterData posterData = MovieDetailsPosterData();
   MovieDetailsNameData nameData = MovieDetailsNameData(name: '', year: '');
   MovieDetailsScoreData scoreData = MovieDetailsScoreData(voteAverage: 0);
   String summary = '';
@@ -80,11 +91,6 @@ class MovieDetailsModel extends ChangeNotifier {
   final int movieId;
   late DateFormat _dateFomat;
   String _locale = '';
-  MovieDetails? _movieDetails;
-  bool _isFavorite = false;
-
-  MovieDetails? get movieDetails => _movieDetails;
-  bool get isFavorite => _isFavorite;
 
   MovieDetailsModel({required this.movieId});
 
@@ -98,17 +104,15 @@ class MovieDetailsModel extends ChangeNotifier {
     await loadDetails(context);
   }
 
-  String stringFromDate(DateTime? date) =>
-      date != null ? _dateFomat.format(date) : '';
-
   Future<void> loadDetails(BuildContext context) async {
     try {
-      _movieDetails = await _movieApiClient.movieDetails(movieId, _locale);
+      final movieDetails = await _movieApiClient.movieDetails(movieId, _locale);
       final sessionId = await _sessionDataProvider.getSessionId();
+      var isFavorite = false;
       if (sessionId != null) {
-        _isFavorite = await _movieApiClient.isFilmFavorite(movieId, sessionId);
+        isFavorite = await _movieApiClient.isFilmFavorite(movieId, sessionId);
       }
-      updateData(_movieDetails, _isFavorite);
+      updateData(movieDetails, isFavorite);
     } on ApiClientException catch (e) {
       _handleApiClientException(e, context);
     }
@@ -122,20 +126,19 @@ class MovieDetailsModel extends ChangeNotifier {
       return;
     }
     data.overview = details.overview ?? '';
-    final iconData =
-        isFavorite == true ? (Icons.favorite) : (Icons.favorite_border_rounded);
+
     data.posterData = MovieDetailsPosterData(
       backdropPath: details.backdropPath,
       posterPath: details.posterPath,
-      favoriteIcon: iconData,
+      isFavorite: isFavorite,
     );
     var year = details.releaseDate?.year.toString();
     year = year != null ? ' ($year)' : '';
     data.nameData = MovieDetailsNameData(name: details.title, year: year);
-    final videos = movieDetails?.videos.results.where(
+    final videos = details.videos.results.where(
       (video) => video.type == 'Trailer' && video.site == 'YouTube',
     );
-    final trailerKey = videos?.isNotEmpty == true ? videos?.first.key : null;
+    final trailerKey = videos.isNotEmpty == true ? videos.first.key : null;
     data.scoreData = MovieDetailsScoreData(
       voteAverage: details.voteAverage * 10,
       trailerKey: trailerKey,
@@ -201,7 +204,9 @@ class MovieDetailsModel extends ChangeNotifier {
     final accountId = await _sessionDataProvider.getAccountId();
     try {
       if (accountId == null || sessionId == null) return;
-      _isFavorite = !_isFavorite;
+      data.posterData = data.posterData.copyWith(
+        isFavorite: !data.posterData.isFavorite,
+      );
       notifyListeners();
 
       await _accountApiClient.addFavorite(
@@ -209,7 +214,7 @@ class MovieDetailsModel extends ChangeNotifier {
         sessionId: sessionId,
         mediaType: MediaType.movie,
         mediaId: movieId,
-        isFavorite: _isFavorite,
+        isFavorite: data.posterData.isFavorite,
       );
     } on ApiClientException catch (e) {
       _handleApiClientException(e, context);
