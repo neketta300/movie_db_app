@@ -14,8 +14,9 @@ class _MovieListWidgetState extends State<MovieListWidget> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    final locale = Localizations.localeOf(context);
     // не попдисываясь на изменение модели, подписываюсь на изменение локали в методе setupLocale
-    context.read<MovieListViewModel>().setupLocale(context);
+    context.read<MovieListViewModel>().setupLocale(locale);
   }
 
   @override
@@ -25,7 +26,7 @@ class _MovieListWidgetState extends State<MovieListWidget> {
 }
 
 class _MovieListWidget extends StatelessWidget {
-  const _MovieListWidget({super.key});
+  const _MovieListWidget();
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +45,7 @@ class _MovieListWidget extends StatelessWidget {
 }
 
 class _SearchWidget extends StatelessWidget {
-  const _SearchWidget({super.key});
+  const _SearchWidget();
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +67,7 @@ class _SearchWidget extends StatelessWidget {
 }
 
 class _MovieListRowWidget extends StatelessWidget {
-  const _MovieListRowWidget({super.key, required this.index});
+  const _MovieListRowWidget({required this.index});
   final int index;
 
   @override

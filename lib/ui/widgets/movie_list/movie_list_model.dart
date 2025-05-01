@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:moviedb_app_llf/domain/entity/movie.dart';
 import 'package:moviedb_app_llf/domain/services/movie_service.dart';
+import 'package:moviedb_app_llf/domain/storage/localized_model_storage.dart';
 import 'package:moviedb_app_llf/library/paginator.dart';
 import 'package:moviedb_app_llf/ui/navigation/main_navigation.dart';
 
@@ -25,7 +26,6 @@ class MovieListViewModel extends ChangeNotifier {
   final _movieApiService = MovieService();
   late final Paginator<Movie> _popularMoviePaginator;
   late final Paginator<Movie> _searchMoviePaginator;
-  String _locale = '';
 
   Timer? searchDeboubce; // таймер для паузы между запросами при поиске фильмов
 
@@ -33,6 +33,8 @@ class MovieListViewModel extends ChangeNotifier {
   late DateFormat
   _dateFomat; // внутри него конструктор который форматирует дату
   String? _seacrhQuery;
+
+  final _localStorage = LocalizedModelStorage();
 
   List<MovieListRowData> get movies => List.unmodifiable(_movies);
 
@@ -43,7 +45,10 @@ class MovieListViewModel extends ChangeNotifier {
 
   MovieListViewModel() {
     _popularMoviePaginator = Paginator<Movie>((page) async {
-      final result = await _movieApiService.popularMovies(page, _locale);
+      final result = await _movieApiService.popularMovies(
+        page,
+        _localStorage.localeTag,
+      );
       return PaginatorLoadResult(
         data: result.movies,
         currentPage: result.page,
@@ -53,7 +58,7 @@ class MovieListViewModel extends ChangeNotifier {
     _searchMoviePaginator = Paginator<Movie>((page) async {
       final result = await _movieApiService.searchMovie(
         page,
-        _locale,
+        _localStorage.localeTag,
         _seacrhQuery ?? '',
       );
       return PaginatorLoadResult(
@@ -64,15 +69,9 @@ class MovieListViewModel extends ChangeNotifier {
     });
   }
 
-  void setupLocale(BuildContext context) {
-    final locale =
-        Localizations.localeOf(
-          context,
-        ).toLanguageTag(); // подписывается на измемениние локали устройства
-    //print(_locale);
-    if (_locale == locale) return;
-    _locale = locale;
-    _dateFomat = DateFormat.yMMMd(locale);
+  void setupLocale(Locale locale) {
+    if (!_localStorage.updateLocale(locale)) return;
+    _dateFomat = DateFormat.yMMMd(_localStorage.localeTag);
     _resetList();
   }
 

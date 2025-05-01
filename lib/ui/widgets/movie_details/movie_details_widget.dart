@@ -16,11 +16,11 @@ class _MovieDetailsWidgetState extends State<MovieDetailsWidget> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-
+    final locale = Localizations.localeOf(context);
     // делается не сразу а на следующем витке iventloop
     // то есть ждет пока дерево сначала достроится и потом вызывает ребилд
     Future.microtask(
-      () => context.read<MovieDetailsModel>().setUpLocale(context),
+      () => context.read<MovieDetailsModel>().setUpLocale(context, locale),
     );
   }
 
