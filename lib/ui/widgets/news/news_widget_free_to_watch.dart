@@ -4,20 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:moviedb_app_llf/ui/widgets/news/news_model.dart';
 import 'package:provider/provider.dart';
 
-class NewsWidgetFreeToWatch extends StatefulWidget {
+class NewsWidgetFreeToWatch extends StatelessWidget {
   const NewsWidgetFreeToWatch({super.key});
-
-  @override
-  State<NewsWidgetFreeToWatch> createState() => _NewsWidgetFreeToWatchState();
-}
-
-class _NewsWidgetFreeToWatchState extends State<NewsWidgetFreeToWatch> {
-  @override
-  void didChangeDependencies() {
-    final locale = Localizations.localeOf(context);
-    context.read<NewsViewModel>().setupLocale(locale);
-    super.didChangeDependencies();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +23,7 @@ class _NewsWidgetFreeToWatchState extends State<NewsWidgetFreeToWatch> {
             itemExtent: 150,
             itemBuilder: (BuildContext context, int index) {
               model.showedMovieAtIndex(index, MovieListType.free);
-              return _MoviesListDataWidget(index: index);
+              return _NewsMoviesListDataWidget(index: index);
             },
           ),
         ),
@@ -44,8 +32,8 @@ class _NewsWidgetFreeToWatchState extends State<NewsWidgetFreeToWatch> {
   }
 }
 
-class _MoviesListDataWidget extends StatelessWidget {
-  const _MoviesListDataWidget({required this.index});
+class _NewsMoviesListDataWidget extends StatelessWidget {
+  const _NewsMoviesListDataWidget({required this.index});
   final int index;
   @override
   Widget build(BuildContext context) {

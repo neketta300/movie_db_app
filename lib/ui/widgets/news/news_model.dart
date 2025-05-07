@@ -110,7 +110,7 @@ class NewsViewModel extends ChangeNotifier {
       id: movie.id,
       title: movie.title,
       releaseDate: releaseDateTitle,
-      voteAverage: movie.voteAverage,
+      voteAverage: movie.voteAverage * 10,
       posterPath: movie.posterPath,
     );
     NewsTrailerData trailerData = NewsTrailerData(trailersKey: 'trailerKey');
