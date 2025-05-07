@@ -10,8 +10,20 @@ class MovieService {
   final _movieApiClient = MovieApiClient();
   final _accountApiClient = AccountApiClient();
   final _moiveApiClient = MovieApiClient();
+  Future<PopularMovieResponse> upcomingMovies(int page, String locale) async =>
+      _moiveApiClient.upcomingMovies(page, locale, Configuration.apiKeyHeader);
+  Future<PopularMovieResponse> freeMovies(int page, String locale) async =>
+      _moiveApiClient.freeMovies(page, locale, Configuration.apiKeyHeader);
   Future<PopularMovieResponse> popularMovies(int page, String locale) async =>
       _moiveApiClient.popularMovies(page, locale, Configuration.apiKeyHeader);
+  Future<PopularMovieResponse> nowPlayingMovies(
+    int page,
+    String locale,
+  ) async => _moiveApiClient.nowPlayingMovies(
+    page,
+    locale,
+    Configuration.apiKeyHeader,
+  );
 
   Future<PopularMovieResponse> searchMovie(
     int page,

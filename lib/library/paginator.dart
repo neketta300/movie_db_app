@@ -22,7 +22,7 @@ class Paginator<T> {
   List<T> get data => _data;
 
   Paginator(this.load);
-
+  // отчищаем пагинаттор
   Future<void> reset() async {
     _currentPage = 0;
     _totalPage = 1;
@@ -43,6 +43,7 @@ class Paginator<T> {
 
       _isLoadingInProgres = false;
     } catch (e) {
+      print('ОШИБКА: $e');
       _isLoadingInProgres = false;
     }
   }

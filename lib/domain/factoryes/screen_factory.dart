@@ -9,6 +9,7 @@ import 'package:moviedb_app_llf/ui/widgets/movie_details/movie_details_model.dar
 import 'package:moviedb_app_llf/ui/widgets/movie_details/movie_details_widget.dart';
 import 'package:moviedb_app_llf/ui/widgets/movie_list/movie_list_model.dart';
 import 'package:moviedb_app_llf/ui/widgets/movie_list/movie_list_widget.dart';
+import 'package:moviedb_app_llf/ui/widgets/news/news_model.dart';
 import 'package:moviedb_app_llf/ui/widgets/news/news_widget.dart';
 import 'package:moviedb_app_llf/ui/widgets/tv_show_list/tv_show_list_widget.dart';
 import 'package:provider/provider.dart';
@@ -41,12 +42,17 @@ class ScreenFactory {
   Widget makeMovieTrailer(String youTubeKey) =>
       MovieTrailerWidget(youTubeKey: youTubeKey);
 
-  Widget makeNewsList() => const NewsWidget();
-
   Widget makeMovieList() {
     return ChangeNotifierProvider(
       create: (_) => MovieListViewModel(),
       child: const MovieListWidget(),
+    );
+  }
+
+  Widget makeNewsList() {
+    return ChangeNotifierProvider(
+      create: (_) => NewsViewModel(),
+      child: const NewsWidget(),
     );
   }
 

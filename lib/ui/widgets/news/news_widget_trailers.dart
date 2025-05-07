@@ -32,7 +32,7 @@ class _NewsWidgetTrailersState extends State<NewsWidgetTrailers> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
-                  'Lastes Trailer',
+                  'Последние трейлеры',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 20,
@@ -48,103 +48,103 @@ class _NewsWidgetTrailersState extends State<NewsWidgetTrailers> {
                   items: [
                     const DropdownMenuItem(
                       value: 'streaming',
-                      child: Text('Streaming'),
+                      child: Text('Онлайн'),
                     ),
-                    const DropdownMenuItem(value: 'tv', child: Text('On TV')),
+                    const DropdownMenuItem(value: 'tv', child: Text('На ТВ')),
                   ],
                 ),
               ],
             ),
           ),
           const SizedBox(height: 20),
-          SizedBox(
-            height: 306,
-            child: LayoutBuilder(
-              builder: (BuildContext context, BoxConstraints constraints) {
-                return ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: 10,
-                  itemExtent: constraints.maxWidth * 0.9,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Column(
-                        children: [
-                          Stack(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 20),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(8),
-                                  child: Stack(
-                                    alignment: Alignment.center,
-                                    children: [
-                                      const Image(
-                                        image: AssetImage(
-                                          AppImages.trailerPreview,
-                                        ),
-                                      ),
-                                      const DecoratedBox(
-                                        decoration: BoxDecoration(
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.black,
-                                              blurRadius: 20,
-                                              spreadRadius: -20,
-                                            ),
-                                          ],
-                                        ),
-                                        child: Icon(
-                                          Icons.play_arrow_rounded,
-                                          color: Colors.white,
-                                          size: 80,
-                                        ),
+          _TrailersBuilderWidget(),
+        ],
+      ),
+    );
+  }
+}
+
+class _TrailersBuilderWidget extends StatelessWidget {
+  const _TrailersBuilderWidget();
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 306,
+      child: LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+          return ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: 10,
+            itemExtent: constraints.maxWidth * 0.9,
+            itemBuilder: (BuildContext context, int index) {
+              return Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Column(
+                  children: [
+                    Stack(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 20),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                const Image(
+                                  image: AssetImage(AppImages.trailerPreview),
+                                ),
+                                const DecoratedBox(
+                                  decoration: BoxDecoration(
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black,
+                                        blurRadius: 20,
+                                        spreadRadius: -20,
                                       ),
                                     ],
                                   ),
-                                ),
-                              ),
-                              Positioned(
-                                top: 15,
-                                right: 15,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey.withValues(alpha: 0.7),
-                                    borderRadius: BorderRadius.circular(20),
+                                  child: Icon(
+                                    Icons.play_arrow_rounded,
+                                    color: Colors.white,
+                                    size: 80,
                                   ),
-                                  child: const Icon(Icons.more_horiz),
                                 ),
-                              ),
-                            ],
-                          ),
-                          const Text(
-                            'Elite',
-                            maxLines: 2,
-                            style: TextStyle(fontSize: 20, color: Colors.white),
-                          ),
-                          const Padding(
-                            padding: EdgeInsets.only(
-                              left: 10,
-                              top: 10,
-                              right: 10,
-                            ),
-                            child: Text(
-                              'Elite Season 4 | Trailter | Netflix',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 17,
-                              ),
+                              ],
                             ),
                           ),
-                        ],
+                        ),
+                        Positioned(
+                          top: 15,
+                          right: 15,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.grey.withValues(alpha: 0.7),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: const Icon(Icons.more_horiz),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const Text(
+                      'Elite',
+                      maxLines: 2,
+                      style: TextStyle(fontSize: 20, color: Colors.white),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.only(left: 10, top: 10, right: 10),
+                      child: Text(
+                        'Elite Season 4 | Trailter | Netflix',
+                        style: TextStyle(color: Colors.white, fontSize: 17),
                       ),
-                    );
-                  },
-                );
-              },
-            ),
-          ),
-        ],
+                    ),
+                  ],
+                ),
+              );
+            },
+          );
+        },
       ),
     );
   }

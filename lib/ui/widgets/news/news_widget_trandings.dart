@@ -1,127 +1,174 @@
-import 'package:moviedb_app_llf/resources/resources.dart';
+import 'package:moviedb_app_llf/domain/api_client/image_downloader.dart';
 import 'package:moviedb_app_llf/ui/widgets/elements/radial_percent_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:moviedb_app_llf/ui/widgets/news/news_model.dart';
+import 'package:provider/provider.dart';
 
 class NewsWidgetTrandings extends StatefulWidget {
   const NewsWidgetTrandings({super.key});
 
   @override
-  _NewsWidgetTrandingsState createState() => _NewsWidgetTrandingsState();
+  State<NewsWidgetTrandings> createState() => _NewsWidgetTrandingsState();
 }
 
 class _NewsWidgetTrandingsState extends State<NewsWidgetTrandings> {
-  final _catrgory = 'today';
+  @override
+  void didChangeDependencies() {
+    final locale = Localizations.localeOf(context);
+    context.read<NewsViewModel>().setupLocale(locale);
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final model = context.watch<NewsViewModel>();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                'Tranding',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
-              ),
-              DropdownButton<String>(
-                value: _catrgory,
-                onChanged: (catrgory) {},
-                items: [
-                  const DropdownMenuItem(value: 'today', child: Text('Today')),
-                  const DropdownMenuItem(
-                    value: 'week',
-                    child: Text('This Week'),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
+        const _WhatsPopularRowWidget(),
         const SizedBox(height: 20),
         SizedBox(
           height: 320,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
-            itemCount: 10,
+            itemCount: model.trendingMovies.length,
             itemExtent: 150,
             itemBuilder: (BuildContext context, int index) {
-              return Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Stack(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 20),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
-                            child: const Image(
-                              image: AssetImage(AppImages.moviePlacholder),
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          top: 15,
-                          right: 15,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.grey.withValues(alpha: 0.7),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: const Icon(Icons.more_horiz),
-                          ),
-                        ),
-                        Positioned(
-                          left: 10,
-                          bottom: 0,
-                          child: SizedBox(
-                            width: 40,
-                            height: 40,
-                            child: RadialPercentWidget(
-                              percent: 0.68,
-                              fillColor: const Color.fromARGB(255, 10, 23, 25),
-                              lineColor: const Color.fromARGB(
-                                255,
-                                37,
-                                203,
-                                103,
-                              ),
-                              freeColor: const Color.fromARGB(255, 25, 54, 31),
-                              lineWidth: 3,
-                              child: const Text(
-                                '68%',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 11,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.only(left: 10, top: 10, right: 10),
-                      child: Text(
-                        'Willy`s Wonderland',
-                        maxLines: 2,
-                        style: TextStyle(fontWeight: FontWeight.w800),
-                      ),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.only(left: 10, top: 10, right: 10),
-                      child: Text('Feb 12, 2021'),
-                    ),
-                  ],
-                ),
-              );
+              model.showedMovieAtIndex(index, MovieListType.trending);
+              return _MoviesListDataWidget(index: index);
             },
           ),
         ),
       ],
+    );
+  }
+}
+
+class _MoviesListDataWidget extends StatelessWidget {
+  const _MoviesListDataWidget({required this.index});
+  final int index;
+  @override
+  Widget build(BuildContext context) {
+    final model = context.read<NewsViewModel>();
+    final movie = model.trendingMovies[index];
+    final posterPath = movie.filmData.posterPath;
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(20),
+        onTap: () => model.onMovieTap(context, index, MovieListType.trending),
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Stack(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 20),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child:
+                          posterPath != null
+                              ? Image.network(
+                                ImageDownloader.imageUrl(posterPath),
+                                width: 150,
+                              )
+                              : SizedBox.shrink(),
+                    ),
+                  ),
+                  Positioned(
+                    top: 15,
+                    right: 15,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey.withValues(alpha: 0.7),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: const Icon(Icons.more_horiz),
+                    ),
+                  ),
+                  _ScoreWidget(index: index),
+                ],
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 10, top: 10, right: 10),
+                child: Text(
+                  movie.filmData.title,
+                  maxLines: 2,
+                  style: TextStyle(fontWeight: FontWeight.w800),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 10, top: 10, right: 10),
+                child: Text(movie.filmData.releaseDate),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _ScoreWidget extends StatelessWidget {
+  const _ScoreWidget({required this.index});
+
+  final int index;
+
+  @override
+  Widget build(BuildContext context) {
+    final score = context.select(
+      (NewsViewModel m) => m.trendingMovies[index].filmData.voteAverage,
+    );
+    return Positioned(
+      left: 10,
+      bottom: 0,
+      child: SizedBox(
+        width: 40,
+        height: 40,
+        child: RadialPercentWidget(
+          percent: score / 100,
+          fillColor: const Color.fromARGB(255, 10, 23, 25),
+          lineColor: const Color.fromARGB(255, 37, 203, 103),
+          freeColor: const Color.fromARGB(255, 25, 54, 31),
+          lineWidth: 3,
+          child: Text(
+            '${score.toStringAsFixed(0)}%',
+            style: TextStyle(color: Colors.white, fontSize: 11),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _WhatsPopularRowWidget extends StatelessWidget {
+  const _WhatsPopularRowWidget();
+
+  @override
+  Widget build(BuildContext context) {
+    final category = 'movies';
+    return Padding(
+      padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const Text(
+            'В тренде',
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+          ),
+          DropdownButton<String>(
+            value: category,
+            onChanged: (catrgory) {},
+            items: [
+              const DropdownMenuItem(value: 'movies', child: Text('Фильмы')),
+              // const DropdownMenuItem(value: 'tv', child: Text('Передачи')),
+              const DropdownMenuItem(value: 'tvShows', child: Text('Сериалы')),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

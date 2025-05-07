@@ -27,11 +27,13 @@ class MovieListViewModel extends ChangeNotifier {
   late final Paginator<Movie> _popularMoviePaginator;
   late final Paginator<Movie> _searchMoviePaginator;
 
-  Timer? searchDeboubce; // таймер для паузы между запросами при поиске фильмов
+  // таймер для паузы между запросами при поиске фильмов
+  Timer? searchDeboubce;
 
   var _movies = <MovieListRowData>[];
-  late DateFormat
-  _dateFomat; // внутри него конструктор который форматирует дату
+
+  // внутри него конструктор который форматирует дату
+  late DateFormat _dateFomat;
   String? _seacrhQuery;
 
   final _localStorage = LocalizedModelStorage();
@@ -80,10 +82,6 @@ class MovieListViewModel extends ChangeNotifier {
     await _popularMoviePaginator.reset();
     await _searchMoviePaginator.reset();
     await _loadNextPage();
-
-    final query = _seacrhQuery;
-    if (query == null) {
-    } else {}
   }
 
   Future<void> _loadNextPage() async {
@@ -133,6 +131,7 @@ class MovieListViewModel extends ChangeNotifier {
     });
   }
 
+  //загрузка следующей пачки фильмов при скроле списка
   void showedMovieAtIndex(int index) {
     // print(index);
     if (index < _movies.length - 1) return;

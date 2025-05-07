@@ -8,6 +8,50 @@ import 'package:moviedb_app_llf/domain/entity/popular_movie_response.dart';
 class MovieApiClient {
   final _networkClient = NetworkClient();
 
+  Future<PopularMovieResponse> upcomingMovies(
+    int page,
+    String locale,
+    String apiKeyHeader,
+  ) async {
+    PopularMovieResponse parser(dynamic json) {
+      final jsonMap = json as Map<String, dynamic>;
+      final response = PopularMovieResponse.fromJson(jsonMap);
+      return response;
+    }
+
+    final result = _networkClient.get(
+      '/movie/upcoming',
+      parser,
+      <String, dynamic>{'Authorization': apiKeyHeader},
+      <String, dynamic>{'language': locale.toString(), 'page': page.toString()},
+    );
+    return result;
+  }
+
+  Future<PopularMovieResponse> freeMovies(
+    int page,
+    String locale,
+    String apiKeyHeader,
+  ) async {
+    PopularMovieResponse parser(dynamic json) {
+      final jsonMap = json as Map<String, dynamic>;
+      final response = PopularMovieResponse.fromJson(jsonMap);
+      return response;
+    }
+
+    final result = _networkClient.get(
+      '/discover/movie',
+      parser,
+      <String, dynamic>{'Authorization': apiKeyHeader},
+      <String, dynamic>{
+        'language': locale.toString(),
+        'page': page.toString(),
+        'with_watch_monetization_types': 'free, ads',
+      },
+    );
+    return result;
+  }
+
   Future<PopularMovieResponse> popularMovies(
     int page,
     String locale,
@@ -23,7 +67,35 @@ class MovieApiClient {
       '/movie/popular',
       parser,
       <String, dynamic>{'Authorization': apiKeyHeader},
-      <String, dynamic>{'language': locale.toString(), 'page': page.toString()},
+      <String, dynamic>{
+        'language': locale.toString(),
+        'page': page.toString(),
+        'with_watch_monetization_types': 'free, ads',
+      },
+    );
+    return result;
+  }
+
+  Future<PopularMovieResponse> nowPlayingMovies(
+    int page,
+    String locale,
+    String apiKeyHeader,
+  ) async {
+    PopularMovieResponse parser(dynamic json) {
+      final jsonMap = json as Map<String, dynamic>;
+      final response = PopularMovieResponse.fromJson(jsonMap);
+      return response;
+    }
+
+    final result = _networkClient.get(
+      '/movie/now_playing',
+      parser,
+      <String, dynamic>{'Authorization': apiKeyHeader},
+      <String, dynamic>{
+        'language': locale.toString(),
+        'page': page.toString(),
+        'with_watch_monetization_types': 'free, ads',
+      },
     );
     return result;
   }
