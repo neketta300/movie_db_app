@@ -1,25 +1,51 @@
-import 'package:flutter/material.dart';
-import 'package:moviedb_app_llf/domain/services/auth_service.dart';
-import 'package:moviedb_app_llf/ui/navigation/main_navigation.dart';
+import 'dart:async';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:moviedb_app_llf/domain/blocs/auth_bloc.dart';
 
-class LoaderViewModel {
-  final BuildContext context;
-  final _authService = AuthService();
+enum LoaderViewCubitState { unknown, authorized, notAuthorized }
 
-  LoaderViewModel(this.context) {
-    asyncInitCheck();
+class LoaderViewCubit extends Cubit<LoaderViewCubitState> {
+  final AuthBloc authBloc;
+  late final StreamSubscription<AuthState> authBlocSubscription;
+  LoaderViewCubit(super.initialState, this.authBloc) {
+    authBloc.add(AuthCheckStatusEvent());
+    onState(authBloc.state);
+    authBlocSubscription = authBloc.stream.listen(onState);
   }
 
-  Future<void> asyncInitCheck() async {
-    await checkAuth();
+  void onState(AuthState state) {
+    if (state is AuthAuthorizedState) {
+      emit(LoaderViewCubitState.authorized);
+    } else if (state is AuthUnAuthorizedState) {
+      emit(LoaderViewCubitState.notAuthorized);
+    }
   }
 
-  Future<void> checkAuth() async {
-    final isAuth = await _authService.isAuth();
-    final nextScreen =
-        isAuth
-            ? MainNavigationRoutesName.mainScreen
-            : MainNavigationRoutesName.auth;
-    Navigator.of(context).pushReplacementNamed(nextScreen);
+  @override
+  Future<void> close() {
+    authBlocSubscription.cancel();
+    return super.close();
   }
 }
+
+// class LoaderViewModel {
+//   final BuildContext context;
+//   final _authService = AuthService();
+
+//   LoaderViewModel(this.context) {
+//     asyncInitCheck();
+//   }
+
+//   Future<void> asyncInitCheck() async {
+//     await checkAuth();
+//   }
+
+//   Future<void> checkAuth() async {
+//     final isAuth = await _authService.isAuth();
+//     final nextScreen =
+//         isAuth
+//             ? MainNavigationRoutesName.mainScreen
+//             : MainNavigationRoutesName.auth;
+//     Navigator.of(context).pushReplacementNamed(nextScreen);
+//   }
+// }

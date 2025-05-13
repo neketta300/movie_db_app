@@ -3,9 +3,9 @@ import 'package:moviedb_app_llf/domain/api_client/auth_api_client.dart';
 import 'package:moviedb_app_llf/domain/data_providers/session_data_provider.dart';
 
 class AuthService {
-  final _sessionDataProvider = SessionDataProvider();
   final _authApiClient = AuthApiClient();
   final _accountApiClient = AccountApiClient();
+  final _sessionDataProvider = SessionDataProvider();
 
   Future<bool> isAuth() async {
     final sessionId = await _sessionDataProvider.getSessionId();

@@ -1,4 +1,6 @@
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:moviedb_app_llf/domain/blocs/auth_bloc.dart';
 import 'package:moviedb_app_llf/library/widgets/movie_trailer/movie_trailer.dart';
 import 'package:moviedb_app_llf/ui/widgets/auth/auth_model.dart';
 import 'package:moviedb_app_llf/ui/widgets/auth/auth_widget.dart';
@@ -15,9 +17,13 @@ import 'package:moviedb_app_llf/ui/widgets/tv_show_list/tv_show_list_widget.dart
 import 'package:provider/provider.dart';
 
 class ScreenFactory {
+  AuthBloc? _authBloc;
   Widget makeLoader() {
-    return Provider(
-      create: (context) => LoaderViewModel(context),
+    final authBloc = _authBloc ?? AuthBloc(AuthCheckStatusInProgressState());
+    _authBloc = authBloc;
+    return BlocProvider<LoaderViewCubit>(
+      create:
+          (context) => LoaderViewCubit(LoaderViewCubitState.unknown, authBloc),
       lazy: false,
       child: const LoaderWidget(),
     );
