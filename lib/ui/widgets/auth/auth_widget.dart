@@ -3,7 +3,6 @@ import 'package:moviedb_app_llf/ui/navigation/main_navigation.dart';
 import 'package:moviedb_app_llf/ui/theme/app_button_style.dart';
 import 'package:moviedb_app_llf/ui/widgets/auth/auth_view_cubit.dart';
 import 'package:flutter/material.dart';
-import 'package:moviedb_app_llf/ui/widgets/loader_widget/loader_view_cubitl.dart';
 import 'package:provider/provider.dart';
 
 class _AuthDataStorage {
@@ -24,6 +23,7 @@ class _AuthWidgetState extends State<AuthWidget> {
     return BlocListener<AuthViewCubit, AuthViewCubitState>(
       listenWhen: (_, current) => current is AuthViewCubitSuccessAuthState,
       listener: _onAuthViewCubitStateChange,
+
       child: Provider(
         create: (_) => _AuthDataStorage(),
         child: Scaffold(
@@ -153,7 +153,7 @@ class _AuthButtonWidget extends StatelessWidget {
     final cubit = context.watch<AuthViewCubit>();
     const color = Color(0xFF01B4E4);
     final canStartAuth =
-        cubit.state is AuthViewCubitFormFillingInProgressState ||
+        cubit.state is AuthViewCubitFillingInProgressState ||
         cubit.state is AuthViewCubitErrorState;
     final authDataStorage = context.read<_AuthDataStorage>();
     final onPressed =

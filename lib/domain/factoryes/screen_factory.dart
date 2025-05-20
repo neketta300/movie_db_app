@@ -4,7 +4,7 @@ import 'package:moviedb_app_llf/domain/blocs/auth_bloc.dart';
 import 'package:moviedb_app_llf/library/widgets/movie_trailer/movie_trailer.dart';
 import 'package:moviedb_app_llf/ui/widgets/auth/auth_view_cubit.dart';
 import 'package:moviedb_app_llf/ui/widgets/auth/auth_widget.dart';
-import 'package:moviedb_app_llf/ui/widgets/loader_widget/loader_view_cubitl.dart';
+import 'package:moviedb_app_llf/ui/widgets/loader_widget/loader_view_cubit.dart';
 import 'package:moviedb_app_llf/ui/widgets/loader_widget/loader_widget.dart';
 import 'package:moviedb_app_llf/ui/widgets/main_screen/main_screen_widget.dart';
 import 'package:moviedb_app_llf/ui/widgets/movie_details/movie_details_model.dart';
@@ -34,16 +34,9 @@ class ScreenFactory {
     _authBloc = authBloc;
     return BlocProvider<AuthViewCubit>(
       create:
-          (_) => AuthViewCubit(
-            AuthViewCubitFormFillingInProgressState(),
-            authBloc,
-          ),
+          (_) => AuthViewCubit(AuthViewCubitFillingInProgressState(), authBloc),
       child: const AuthWidget(),
     );
-    // return ChangeNotifierProvider(
-    //   create: (_) => AuthModel(),
-    //   child: const AuthWidget(),
-    // );
   }
 
   Widget makeMainScreen() {

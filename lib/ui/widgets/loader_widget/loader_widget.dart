@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:moviedb_app_llf/ui/navigation/main_navigation.dart';
-import 'package:moviedb_app_llf/ui/widgets/loader_widget/loader_view_cubitl.dart';
+import 'package:moviedb_app_llf/ui/widgets/loader_widget/loader_view_cubit.dart';
 
 class LoaderWidget extends StatefulWidget {
   const LoaderWidget({super.key});

@@ -11,11 +11,13 @@ class LoaderViewCubit extends Cubit<LoaderViewCubitState> {
   LoaderViewCubit(super.initialState, this.authBloc) {
     Future.microtask(() {
       _onState(authBloc.state);
+      // подписка на изменения стейта (emit'ы) в authBloc
       authBlocSubscription = authBloc.stream.listen(_onState);
       authBloc.add(AuthCheckStatusEvent());
     });
   }
 
+  // обработка стейтов
   void _onState(AuthState state) {
     if (state is AuthAuthorizedState) {
       emit(LoaderViewCubitState.authorized);
@@ -30,25 +32,3 @@ class LoaderViewCubit extends Cubit<LoaderViewCubitState> {
     return super.close();
   }
 }
-
-// class LoaderViewModel {
-//   final BuildContext context;
-//   final _authService = AuthService();
-
-//   LoaderViewModel(this.context) {
-//     asyncInitCheck();
-//   }
-
-//   Future<void> asyncInitCheck() async {
-//     await checkAuth();
-//   }
-
-//   Future<void> checkAuth() async {
-//     final isAuth = await _authService.isAuth();
-//     final nextScreen =
-//         isAuth
-//             ? MainNavigationRoutesName.mainScreen
-//             : MainNavigationRoutesName.auth;
-//     Navigator.of(context).pushReplacementNamed(nextScreen);
-//   }
-// }

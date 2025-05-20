@@ -5,22 +5,22 @@ import 'package:moviedb_app_llf/domain/blocs/auth_bloc.dart';
 
 abstract class AuthViewCubitState {}
 
-class AuthViewCubitFormFillingInProgressState extends AuthViewCubitState {}
+class AuthViewCubitFillingInProgressState extends AuthViewCubitState {}
 
 class AuthViewCubitErrorState extends AuthViewCubitState {
   final String _errorMessage;
   get errorMessage => _errorMessage;
-  AuthViewCubitErrorState(this._errorMessage, bool isAuthProgress);
+  AuthViewCubitErrorState(this._errorMessage);
 
   @override
-  bool operator ==(covariant AuthViewCubitErrorState other) {
-    if (identical(this, other)) return true;
-
-    return other._errorMessage == _errorMessage;
-  }
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is AuthViewCubitErrorState &&
+          runtimeType == other.runtimeType &&
+          errorMessage == other.errorMessage;
 
   @override
-  int get hashCode => _errorMessage.hashCode;
+  int get hashCode => errorMessage.hashCode;
 }
 
 class AuthViewCubitInProgressState extends AuthViewCubitState {}
@@ -32,16 +32,18 @@ class AuthViewCubit extends Cubit<AuthViewCubitState> {
   late final StreamSubscription<AuthState> authBlocSubscription;
 
   AuthViewCubit(super.initialState, this.authBloc) {
+    print('AuthViewCubit received state: ${state.runtimeType}');
+    print('AuthViewCubit received state: ${authBloc.state}');
     _onState(authBloc.state);
     authBlocSubscription = authBloc.stream.listen(_onState);
   }
 
   bool _isValid(String login, String password) =>
-      login.isNotEmpty || password.isNotEmpty;
+      login.isNotEmpty && password.isNotEmpty;
 
   void auth({required String login, required String password}) {
     if (!_isValid(login, password)) {
-      final state = AuthViewCubitErrorState('Заполните логин и пароль', false);
+      final state = AuthViewCubitErrorState('Заполните логин и пароль');
       emit(state);
       return;
     }
@@ -50,14 +52,15 @@ class AuthViewCubit extends Cubit<AuthViewCubitState> {
   }
 
   void _onState(AuthState state) {
+    print('AuthViewCubit received state: ${state.runtimeType}');
     if (state is AuthAuthorizedState) {
       authBlocSubscription.cancel();
       emit(AuthViewCubitSuccessAuthState());
     } else if (state is AuthUnAuthorizedState) {
-      emit(AuthViewCubitFormFillingInProgressState());
+      emit(AuthViewCubitFillingInProgressState());
     } else if (state is AuthFailureState) {
       final message = _mapErrorToMessage(state.error);
-      emit(AuthViewCubitErrorState(message, false));
+      emit(AuthViewCubitErrorState(message));
     } else if (state is AuthInProgressState) {
       emit(AuthViewCubitInProgressState());
     } else if (state is AuthCheckStatusInProgressState) {
@@ -90,71 +93,3 @@ class AuthViewCubit extends Cubit<AuthViewCubitState> {
     return super.close();
   }
 }
-
-// class AuthModel extends ChangeNotifier {
-//   final _authService = AuthService();
-
-//   final loginTextController = TextEditingController();
-//   final passwordTextController = TextEditingController();
-
-//   String? _errorMessage;
-//   String? get errorMessage => _errorMessage;
-
-//   bool _isAuthProgress = false;
-//   bool get canStartAuth => !_isAuthProgress;
-//   bool get isAuthProgress => _isAuthProgress;
-
-//   bool _isValid(String login, String password) =>
-//       login.isNotEmpty || password.isNotEmpty;
-
-//   Future<String?> _login(String login, String password) async {
-//     try {
-//       await _authService.login(login, password);
-//     } on ApiClientException catch (e) {
-//       switch (e.type) {
-//         case ApiCLientExceptionType.network:
-//           return 'Сервер недоступен, нет подключения к инету';
-
-//         case ApiCLientExceptionType.auth:
-//           return 'Неправильный логин или пароль';
-//         case ApiCLientExceptionType.sessionExpired:
-//           return 'Произошла ошибка. Срок сессии истек';
-//         case ApiCLientExceptionType.apiKey:
-//           return 'Неверный ApiKey';
-//         case ApiCLientExceptionType.other:
-//           return 'Произошла ошибка. Попробуйте еще раз';
-//       }
-//     } catch (e) {
-//       return 'Неизвестная ошибка, поторите попытку';
-//     }
-//     return null;
-//   }
-
-//   Future<void> auth(BuildContext context) async {
-//     final login = loginTextController.text;
-//     final password = passwordTextController.text;
-
-//     if (!_isValid(login, password)) {
-//       _updateState('Заполните логин и пароль', false);
-//       return;
-//     }
-
-//     _updateState(null, true);
-
-//     _errorMessage = await _login(login, password);
-//     if (_errorMessage == null) {
-//       MainNavigation.resetNavigation(context);
-//     } else {
-//       _updateState(_errorMessage, false);
-//     }
-//   }
-
-//   void _updateState(String? errorMessage, bool isAuthProgress) {
-//     if (_errorMessage == errorMessage && _isAuthProgress == isAuthProgress) {
-//       return;
-//     }
-//     _errorMessage = errorMessage;
-//     _isAuthProgress = isAuthProgress;
-//     notifyListeners();
-//   }
-// }

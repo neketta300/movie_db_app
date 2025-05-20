@@ -1,5 +1,7 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:moviedb_app_llf/domain/api_client/account_api_client.dart';
 import 'package:moviedb_app_llf/domain/api_client/auth_api_client.dart';
 import 'package:moviedb_app_llf/domain/data_providers/session_data_provider.dart';
@@ -29,17 +31,25 @@ class AuthFailureState extends AuthState {
   AuthFailureState({required this.error});
 
   @override
-  bool operator ==(covariant AuthFailureState other) {
-    if (identical(this, other)) return true;
-
-    return other.error == error;
-  }
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is AuthFailureState &&
+          runtimeType == other.runtimeType &&
+          error == other.error;
 
   @override
   int get hashCode => error.hashCode;
 }
 
-class AuthInProgressState extends AuthState {}
+class AuthInProgressState extends AuthState {
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is AuthInProgressState && runtimeType == other.runtimeType;
+
+  @override
+  int get hashCode => 0;
+}
 
 class AuthCheckStatusInProgressState extends AuthState {}
 
@@ -58,9 +68,11 @@ class AuthBloc extends Bloc<AuthEvents, AuthState> {
         await onAuthLogoutEvent(event, emit);
       }
     }, transformer: sequential());
+    // закидывает ивент проверки авторизации
     add(AuthCheckStatusEvent());
   }
 
+  // проверка на авторизованность
   Future<void> onAuthCheckStatusEvent(
     AuthCheckStatusEvent event,
     Emitter<AuthState> emit,
